@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:lcmobileapp/route/route_helper.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
-import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
+import '../../utils/dimensions.dart';
+import 'package:get/get.dart';
 
-class UserInfo extends StatelessWidget {
-  const UserInfo({super.key});
+class ChangePasswordPage extends StatelessWidget {
+  const ChangePasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +21,21 @@ class UserInfo extends StatelessWidget {
             right: Dimensions.width10,
             child: Row(
               children: [
-                BigText(
-                  text: "Back",
-                  size: Dimensions.fontSize16,
-                  color: AppColor.mainColor,
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(RouteHelper.getInitialPage());
+                  },
+                  child: BigText(
+                    text: "Back",
+                    size: Dimensions.fontSize16,
+                    color: AppColor.mainColor,
+                  ),
                 ),
                 SizedBox(
                   width: Dimensions.width20 * 2.5,
                 ),
                 BigText(
-                  text: "Thông tin người dùng",
+                  text: "Đổi mật khẩu",
                   size: Dimensions.fontSize25,
                   color: AppColor.mainColor,
                 )
@@ -45,14 +52,13 @@ class UserInfo extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SmallText(
-                    text: "Tên đăng nhập",
+                    text: "Mật khẩu hiện tại",
                     size: Dimensions.fontSize14,
                   ),
                   SizedBox(
                     height: Dimensions.height10,
                   ),
                   TextFormField(
-                    initialValue: "quan.tran",
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius:
@@ -64,11 +70,13 @@ class UserInfo extends StatelessWidget {
                     height: Dimensions.height10,
                   ),
                   SmallText(
-                    text: "Nhóm quyền",
+                    text: "Mật khẩu mới",
                     size: Dimensions.fontSize14,
                   ),
+                  SizedBox(
+                    height: Dimensions.height10,
+                  ),
                   TextFormField(
-                    initialValue: "Supper Admin",
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius:
@@ -80,43 +88,13 @@ class UserInfo extends StatelessWidget {
                     height: Dimensions.height10,
                   ),
                   SmallText(
-                    text: "Email",
+                    text: "Nhắc lại mật khẩu",
                     size: Dimensions.fontSize14,
-                  ),
-                  TextFormField(
-                    initialValue: "quan.tran@cict.com.vn",
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(Dimensions.radius15),
-                      ),
-                    ),
                   ),
                   SizedBox(
                     height: Dimensions.height10,
                   ),
-                  SmallText(
-                    text: "Tên đầy đủ",
-                    size: Dimensions.fontSize14,
-                  ),
                   TextFormField(
-                    initialValue: "Trần Hồng Quân",
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(Dimensions.radius15),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  SmallText(
-                    text: "Số điện thoại",
-                    size: Dimensions.fontSize14,
-                  ),
-                  TextFormField(
-                    initialValue: "0372776820",
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius:

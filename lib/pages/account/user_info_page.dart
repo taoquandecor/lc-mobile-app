@@ -1,24 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:lcmobileapp/route/route_helper.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
+import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
+import 'package:get/get.dart';
 
-import '../../utils/dimensions.dart';
-
-class ChangePassword extends StatefulWidget {
-  const ChangePassword({super.key});
-
-  @override
-  State<ChangePassword> createState() => _ChangePasswordState();
-}
-
-class _ChangePasswordState extends State<ChangePassword> {
-  bool _passwordVisible = true;
-
-  @override
-  void initState() {
-    _passwordVisible = false;
-  }
+class UserInfoPage extends StatelessWidget {
+  const UserInfoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +21,21 @@ class _ChangePasswordState extends State<ChangePassword> {
             right: Dimensions.width10,
             child: Row(
               children: [
-                BigText(
-                  text: "Back",
-                  size: Dimensions.fontSize16,
-                  color: AppColor.mainColor,
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(RouteHelper.initialPage);
+                  },
+                  child: BigText(
+                    text: "Back",
+                    size: Dimensions.fontSize16,
+                    color: AppColor.mainColor,
+                  ),
                 ),
                 SizedBox(
                   width: Dimensions.width20 * 2.5,
                 ),
                 BigText(
-                  text: "Đổi mật khẩu",
+                  text: "Thông tin người dùng",
                   size: Dimensions.fontSize25,
                   color: AppColor.mainColor,
                 )
@@ -58,85 +52,84 @@ class _ChangePasswordState extends State<ChangePassword> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SmallText(
-                    text: "Mật khẩu hiện tại",
+                    text: "Tên đăng nhập",
                     size: Dimensions.fontSize14,
                   ),
                   SizedBox(
                     height: Dimensions.height10,
                   ),
                   TextFormField(
-                    obscureText: !_passwordVisible,
+                    initialValue: "quan.tran",
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.radius15),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(_passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
-                        )),
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius15),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: Dimensions.height10,
                   ),
                   SmallText(
-                    text: "Mật khẩu mới",
+                    text: "Nhóm quyền",
                     size: Dimensions.fontSize14,
                   ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
                   TextFormField(
-                    obscureText: !_passwordVisible,
+                    initialValue: "Supper Admin",
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.radius15),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(_passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
-                        )),
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius15),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: Dimensions.height10,
                   ),
                   SmallText(
-                    text: "Nhắc lại mật khẩu",
+                    text: "Email",
                     size: Dimensions.fontSize14,
+                  ),
+                  TextFormField(
+                    initialValue: "quan.tran@cict.com.vn",
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius15),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: Dimensions.height10,
                   ),
+                  SmallText(
+                    text: "Tên đầy đủ",
+                    size: Dimensions.fontSize14,
+                  ),
                   TextFormField(
-                    obscureText: !_passwordVisible,
+                    initialValue: "Trần Hồng Quân",
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.radius15),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(_passwordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                          onPressed: () {
-                            setState(() {
-                              _passwordVisible = !_passwordVisible;
-                            });
-                          },
-                        )),
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius15),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10,
+                  ),
+                  SmallText(
+                    text: "Số điện thoại",
+                    size: Dimensions.fontSize14,
+                  ),
+                  TextFormField(
+                    initialValue: "0372776820",
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radius15),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     height: Dimensions.height10,

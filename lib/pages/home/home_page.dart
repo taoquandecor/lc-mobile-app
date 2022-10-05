@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lcmobileapp/pages/account/profile_page.dart';
 import 'package:lcmobileapp/pages/home/main_page.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
 
@@ -13,9 +14,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   List pages = [
     MainPage(),
-    Container(
-      child: Center(child: Text("Next page")),
-    ),
+    ProfilePage(),
     Container(
       child: Center(child: Text("Next next page")),
     ),
@@ -48,12 +47,12 @@ class _HomePageState extends State<HomePage> {
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.archive),
-            label: "Archive",
+            icon: Icon(Icons.list),
+            label: "Profile",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: "Cart",
+            icon: Icon(Icons.phone_iphone),
+            label: "Tally",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

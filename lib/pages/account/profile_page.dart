@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lcmobileapp/route/route_helper.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';
-import 'package:lcmobileapp/widgets/app_icon.dart';
+import 'package:get/get.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/icon_and_text_widget.dart';
 
-class Profile extends StatelessWidget {
-  const Profile({super.key});
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -105,10 +106,15 @@ class Profile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconAndTextWidget(
-                      text: "Thông tin tài khoản",
-                      icon: Icons.person,
-                      iconColor: Colors.orange,
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(RouteHelper.getUserInfoPage());
+                      },
+                      child: IconAndTextWidget(
+                        text: "Thông tin tài khoản",
+                        icon: Icons.person,
+                        iconColor: Colors.orange,
+                      ),
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -122,10 +128,15 @@ class Profile extends StatelessWidget {
                     SizedBox(
                       height: Dimensions.height10,
                     ),
-                    IconAndTextWidget(
-                      text: "Đổi mật khẩu",
-                      icon: Icons.key,
-                      iconColor: Colors.orange,
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(RouteHelper.getChangePasswordPage());
+                      },
+                      child: IconAndTextWidget(
+                        text: "Đổi mật khẩu",
+                        icon: Icons.key,
+                        iconColor: Colors.orange,
+                      ),
                     ),
                     SizedBox(
                       height: Dimensions.height10,
