@@ -110,7 +110,7 @@ class ProfilePage extends StatelessWidget {
                       onTap: () {
                         Get.toNamed(RouteHelper.getUserInfoPage());
                       },
-                      child: IconAndTextWidget(
+                      child: const IconAndTextWidget(
                         text: "Thông tin tài khoản",
                         icon: Icons.person,
                         iconColor: Colors.orange,
@@ -132,7 +132,7 @@ class ProfilePage extends StatelessWidget {
                       onTap: () {
                         Get.toNamed(RouteHelper.getChangePasswordPage());
                       },
-                      child: IconAndTextWidget(
+                      child: const IconAndTextWidget(
                         text: "Đổi mật khẩu",
                         icon: Icons.key,
                         iconColor: Colors.orange,
@@ -150,7 +150,7 @@ class ProfilePage extends StatelessWidget {
                     SizedBox(
                       height: Dimensions.height10,
                     ),
-                    IconAndTextWidget(
+                    const IconAndTextWidget(
                       text: "Đăng xuất",
                       icon: Icons.logout,
                       iconColor: Colors.orange,
