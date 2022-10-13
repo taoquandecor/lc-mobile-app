@@ -23,7 +23,7 @@ class ChangePasswordPage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Get.toNamed(RouteHelper.getInitialPage());
+                    Navigator.of(context).pop();
                   },
                   child: BigText(
                     text: "Back",

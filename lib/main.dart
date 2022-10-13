@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lcmobileapp/route/route_helper.dart';
+import 'package:lcmobileapp/utils/app_color.dart';
 import 'helper/dependencies.dart' as dep;
 
 Future<void> main() async {
@@ -16,6 +17,10 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'LCMobileApp',
+      // theme: ThemeData(
+      //     primaryColor: AppColor.mainColor,
+      //     canvasColor: Colors.transparent,
+      //     scaffoldBackgroundColor: Colors.white),
       initialRoute: RouteHelper.getSplashPage(),
       getPages: RouteHelper.routes,
     );

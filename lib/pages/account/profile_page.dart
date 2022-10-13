@@ -150,10 +150,15 @@ class ProfilePage extends StatelessWidget {
                     SizedBox(
                       height: Dimensions.height10,
                     ),
-                    const IconAndTextWidget(
-                      text: "Đăng xuất",
-                      icon: Icons.logout,
-                      iconColor: Colors.orange,
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(RouteHelper.getLoginPage());
+                      },
+                      child: IconAndTextWidget(
+                        text: "Đăng xuất",
+                        icon: Icons.logout,
+                        iconColor: Colors.orange,
+                      ),
                     ),
                     SizedBox(
                       height: Dimensions.height10,

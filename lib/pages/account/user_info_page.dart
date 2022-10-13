@@ -23,7 +23,7 @@ class UserInfoPage extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Get.toNamed(RouteHelper.initialPage);
+                    Navigator.of(context).pop();
                   },
                   child: BigText(
                     text: "Back",

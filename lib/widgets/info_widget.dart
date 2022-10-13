@@ -15,20 +15,15 @@ class InfoWiget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-          left: Dimensions.width10,
-          right: Dimensions.width10,
-          top: Dimensions.height10 / 2,
-          bottom: Dimensions.height10 / 2),
       padding: EdgeInsets.only(
+          top: Dimensions.height10 / 2,
           left: Dimensions.width10,
           right: Dimensions.width10,
-          top: Dimensions.height10 / 2,
           bottom: Dimensions.height10 / 2),
-      width: Dimensions.width20 * 5.5,
       color: color,
       child: Center(
           child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           BigText(
             text: text,

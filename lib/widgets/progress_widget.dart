@@ -43,6 +43,8 @@ class ProgressWidget extends StatelessWidget {
                 ),
               ),
               Container(
+                padding: EdgeInsets.only(
+                    left: Dimensions.width10, right: Dimensions.width10),
                 width: MediaQuery.of(context).size.width / limit * progress,
                 decoration: const BoxDecoration(
                   color: Color(0xFFEC4073),
