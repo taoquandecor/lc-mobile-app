@@ -8,6 +8,7 @@ import 'package:lcmobileapp/pages/auth/login_page.dart';
 import 'package:lcmobileapp/pages/home/home_page.dart';
 import 'package:lcmobileapp/pages/tally/first_weight_detail_page.dart';
 import 'package:lcmobileapp/pages/tally/second_weight_detail_page.dart';
+import 'package:lcmobileapp/pages/tally/tally_berth_detail_page.dart';
 import 'package:lcmobileapp/splash/splash_page.dart';
 
 class RouteHelper {
@@ -19,6 +20,7 @@ class RouteHelper {
   static const String fistWeightDetail = "/first-weight-detail";
   static const String secondWeightDetail = "/second-weight-detail";
   static const String loginPage = "/login-page";
+  static const String tallyBerthDetail = "/tally-berth-detail";
 
   static String getSplashPage() => "$splashPage";
   static String getInitialPage() => "$initialPage";
@@ -28,6 +30,7 @@ class RouteHelper {
   static String getFirstWeightDetailPage() => "$fistWeightDetail";
   static String getSecondWeightDetailPage() => "$secondWeightDetail";
   static String getLoginPage() => "$loginPage";
+  static String getTallyBerthDetailPage() => "$tallyBerthDetail";
 
   static List<GetPage> routes = [
     GetPage(name: splashPage, page: () => SplashScreen()),
@@ -38,5 +41,6 @@ class RouteHelper {
     GetPage(name: fistWeightDetail, page: () => FirstWeightDetailPage()),
     GetPage(name: loginPage, page: () => LoginPage()),
     GetPage(name: secondWeightDetail, page: () => SecondWeightDetailPage()),
+    GetPage(name: tallyBerthDetail, page: () => TallyBerthDetailPage()),
   ];
 }

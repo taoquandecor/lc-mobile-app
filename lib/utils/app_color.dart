@@ -7,4 +7,6 @@ class AppColor {
   static Color backgroundColor = const Color(0xFFFAFAFA);
 
   static Color lineColor = const Color(0xFFFCCC7C5);
+
+  static Color backgroundWhiteColor = const Color(0xFFFFFFFF);
 }

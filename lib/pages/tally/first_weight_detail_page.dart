@@ -29,7 +29,7 @@ class FirstWeightDetailPage extends StatelessWidget {
             size: Dimensions.fontSize25,
           ),
           backgroundColor: AppColor.backgroundColor,
-          elevation: 0,
+          elevation: 5,
           bottom: TabBar(
             unselectedLabelColor: AppColor.backgroundColor,
             indicatorSize: TabBarIndicatorSize.tab,

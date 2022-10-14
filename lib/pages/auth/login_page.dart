@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lcmobileapp/base/show_custom_snackbar.dart';
+import 'package:lcmobileapp/models/login_model.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
@@ -11,12 +13,27 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var userNameController = TextEditingController();
     var passwordController = TextEditingController();
+
+    void _login() {
+      String userName = userNameController.text;
+      String passWord = passwordController.text;
+
+      if (userName.isEmpty) {
+        showCustomSnackBar("UserName is not empty", title: "UserName");
+      } else if (passWord.isEmpty) {
+        showCustomSnackBar("Password is not empty", title: "Password");
+      } else {
+        LoginModel loginModel =
+            LoginModel(userName: userName, passWord: passWord);
+      }
+    }
+
     return Scaffold(
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.only(top: Dimensions.height20),
-            height: 600,
+            height: Dimensions.pageLoginView,
             child: Column(
               children: [
                 Row(
@@ -83,7 +100,9 @@ class LoginPage extends StatelessWidget {
                         height: Dimensions.height20 * 2,
                         width: Dimensions.screenWidth * 0.8,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _login();
+                          },
                           child: BigText(
                             text: "Đăng nhập",
                             color: Colors.white,

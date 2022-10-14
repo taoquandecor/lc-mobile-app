@@ -46,10 +46,15 @@ class ProfilePage extends StatelessWidget {
                   color: Colors.white,
                   size: Dimensions.fontSize25,
                 ),
-                BigText(
-                    text: "Đăng xuất",
-                    color: Colors.white,
-                    size: Dimensions.fontSize16)
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(RouteHelper.getLoginPage());
+                  },
+                  child: BigText(
+                      text: "Đăng xuất",
+                      color: Colors.white,
+                      size: Dimensions.fontSize16),
+                )
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lcmobileapp/pages/account/profile_page.dart';
 import 'package:lcmobileapp/pages/home/main_page.dart';
 import 'package:lcmobileapp/pages/tally/first_weight_page.dart';
+import 'package:lcmobileapp/pages/tally/tally_berth_page.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,9 +17,7 @@ class _HomePageState extends State<HomePage> {
   List pages = [
     MainPage(),
     FirstWeightPage(),
-    Container(
-      child: Center(child: Text("Next next page")),
-    ),
+    TallyBerthPage(),
     ProfilePage(),
   ];
   void onTapNav(int index) {

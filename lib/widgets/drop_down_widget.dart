@@ -17,18 +17,20 @@ class DropDownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Dimensions.height55,
+      height: Dimensions.height50,
+      padding: EdgeInsets.only(
+          left: Dimensions.width20 / 5, right: Dimensions.width20 / 5),
       child: DropdownButtonFormField(
         decoration: InputDecoration(
-          fillColor: Colors.white,
-          filled: true,
+          fillColor: Colors.black,
+          filled: false,
           hintText: hint,
           enabledBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.white, width: 1.0),
+            borderSide: const BorderSide(color: Colors.black, width: 0.5),
             borderRadius: BorderRadius.circular(Dimensions.radius15),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: Colors.white, width: 1.0),
+            borderSide: const BorderSide(color: Colors.black, width: 0.5),
             borderRadius: BorderRadius.circular(Dimensions.radius15),
           ),
         ),
@@ -38,7 +40,7 @@ class DropDownWidget extends StatelessWidget {
               value: item,
               child: BigText(
                 text: "Text $item",
-                size: Dimensions.fontSize12,
+                size: Dimensions.fontSize14,
               ));
         }).toList(),
         onChanged: onChange,
