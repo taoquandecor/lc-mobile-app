@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -46,7 +47,17 @@ class UserController extends GetxController implements GetxService {
       } else {
         ResponseErrorModel responseErrorModel = ResponseErrorModel();
         responseErrorModel = ResponseErrorModel.fromJson(response.body);
-        responseModel = ResponseModel(false, "sdfdsafadf");
+
+        String errorMessage = "";
+
+        responseErrorModel.errors!.forEach((key, value) {
+          errorMessage += key;
+          errorMessage += ": ";
+          errorMessage += value[0].toString();
+          errorMessage += "\r";
+        });
+
+        responseModel = ResponseModel(false, errorMessage);
       }
     } else {
       responseModel = ResponseModel(false, response.statusText.toString());
@@ -54,5 +65,40 @@ class UserController extends GetxController implements GetxService {
     _isLoading = true;
     update();
     return responseModel;
+  }
+
+  Future<ResponseModel> updatePassword(
+      String oldPass, String newPass, String rePass) async {
+    Response response = await userRepo.updatePassword(oldPass, newPass, rePass);
+    ResponseModel responseModel;
+
+    if (response.statusCode == 200) {
+      if (response.body["Code"] == 200) {
+        responseModel = ResponseModel(true, response.body["Message"]);
+      } else {
+        ResponseErrorModel responseErrorModel = ResponseErrorModel();
+        responseErrorModel = ResponseErrorModel.fromJson(response.body);
+
+        String errorMessage = "";
+
+        responseErrorModel.errors!.forEach((key, value) {
+          errorMessage += key;
+          errorMessage += ": ";
+          errorMessage += value[0].toString();
+          errorMessage += "\r";
+        });
+
+        responseModel = ResponseModel(false, errorMessage);
+      }
+    } else {
+      responseModel = ResponseModel(false, response.statusText.toString());
+    }
+    _isLoading = true;
+    update();
+    return responseModel;
+  }
+
+  bool clearSharedData() {
+    return userRepo.clearSharedData();
   }
 }
