@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:lcmobileapp/pages/account/profile_page.dart';
 import 'package:lcmobileapp/pages/account/user_info_page.dart';
@@ -33,14 +31,50 @@ class RouteHelper {
   static String getTallyBerthDetailPage() => "$tallyBerthDetail";
 
   static List<GetPage> routes = [
-    GetPage(name: splashPage, page: () => SplashScreen()),
-    GetPage(name: initialPage, page: () => HomePage()),
-    GetPage(name: profilePage, page: () => ProfilePage()),
-    GetPage(name: userInfoPage, page: () => UserInfoPage()),
-    GetPage(name: changePasswordPage, page: () => ChangePasswordPage()),
-    GetPage(name: fistWeightDetail, page: () => FirstWeightDetailPage()),
-    GetPage(name: loginPage, page: () => LoginPage()),
-    GetPage(name: secondWeightDetail, page: () => SecondWeightDetailPage()),
-    GetPage(name: tallyBerthDetail, page: () => TallyBerthDetailPage()),
+    GetPage(
+      name: splashPage,
+      page: () => SplashScreen(),
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: initialPage,
+      page: () => HomePage(),
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: profilePage,
+      page: () => ProfilePage(),
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: userInfoPage,
+      page: () => UserInfoPage(),
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: changePasswordPage,
+      page: () => ChangePasswordPage(),
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: fistWeightDetail,
+      page: () => FirstWeightDetailPage(),
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: loginPage,
+      page: () => LoginPage(),
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: secondWeightDetail,
+      page: () => SecondWeightDetailPage(),
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: tallyBerthDetail,
+      page: () => TallyBerthDetailPage(),
+      transition: Transition.fade,
+    ),
   ];
 }

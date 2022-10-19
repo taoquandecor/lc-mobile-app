@@ -44,7 +44,8 @@ dev_dependencies:
   shared_preferences: ^2.0.15
   intl: ^0.17.0
   flutter_datetime_picker: ^1.5.1
-  timelines: ^0.1.0  
+  timelines: ^0.1.0
+  cached_network_image: ^3.2.2  
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

@@ -15,10 +15,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   List pages = [
-    MainPage(),
-    FirstWeightPage(),
-    TallyBerthPage(),
-    ProfilePage(),
+    const MainPage(),
+    const FirstWeightPage(),
+    const TallyBerthPage(),
+    const ProfilePage(),
   ];
   void onTapNav(int index) {
     setState(() {

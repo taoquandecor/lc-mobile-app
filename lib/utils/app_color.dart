@@ -9,4 +9,5 @@ class AppColor {
   static Color lineColor = const Color(0xFFFCCC7C5);
 
   static Color backgroundWhiteColor = const Color(0xFFFFFFFF);
+  static Color errorColor = const Color(0xFFFF0000);
 }

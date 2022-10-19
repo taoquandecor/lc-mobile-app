@@ -17,10 +17,6 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'LCMobileApp',
-      // theme: ThemeData(
-      //     primaryColor: AppColor.mainColor,
-      //     canvasColor: Colors.transparent,
-      //     scaffoldBackgroundColor: Colors.white),
       initialRoute: RouteHelper.getSplashPage(),
       getPages: RouteHelper.routes,
     );
