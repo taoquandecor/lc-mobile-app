@@ -4,10 +4,10 @@ import 'package:lcmobileapp/pages/home/main_page.dart';
 import 'package:lcmobileapp/pages/tally/first_weight_page.dart';
 import 'package:lcmobileapp/pages/tally/tally_berth_page.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -20,6 +20,18 @@ class _HomePageState extends State<HomePage> {
     const TallyBerthPage(),
     const ProfilePage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    var response = Get.arguments;
+    if (response == "FirstWeight") {
+      _selectedIndex = 1; // tally bốt cân
+    } else if (response == "TallyBerth") {
+      _selectedIndex = 2; // tally cầu bến
+    }
+  }
+
   void onTapNav(int index) {
     setState(() {
       _selectedIndex = index;

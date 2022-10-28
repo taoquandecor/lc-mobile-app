@@ -3,6 +3,7 @@ import 'package:lcmobileapp/base/show_custom_snackbar.dart';
 import 'package:lcmobileapp/controller/user_controller.dart';
 import 'package:lcmobileapp/route/route_helper.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
+import 'package:lcmobileapp/utils/app_message.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
 import '../../utils/dimensions.dart';
@@ -24,16 +25,17 @@ class ChangePasswordPage extends StatelessWidget {
       String reNewPass = reNewPassword.text.trim();
 
       if (oldPass.isEmpty) {
-        showCustomSnackBar("Type in a your old password",
-            title: "Old Password");
+        showCustomSnackBar(AppMessage.EMPTY_OLDPASS_MESSAGE,
+            title: AppMessage.OLD_PASSWORD);
       } else if (newPass.isEmpty) {
-        showCustomSnackBar("Type in a your new password",
-            title: "New Password");
+        showCustomSnackBar(AppMessage.EMPTY_NEWPASS_MESSAGE,
+            title: AppMessage.NEW_PASSWORD);
       } else if (reNewPass.isEmpty) {
-        showCustomSnackBar("Type in a your re-new password",
-            title: "ReNew Password");
+        showCustomSnackBar(AppMessage.EMPTY_RENEW_MESSAGE,
+            title: AppMessage.RENEW_PASSWORD);
       } else if (newPass != reNewPass) {
-        showCustomSnackBar("Password is not match", title: "Password");
+        showCustomSnackBar(AppMessage.ERROR_MESSAGE4,
+            title: AppMessage.PASSWORD);
       } else {
         userController
             .updatePassword(oldPass, newPass, reNewPass)
@@ -42,7 +44,7 @@ class ChangePasswordPage extends StatelessWidget {
             userController.clearSharedData();
             Get.offNamed(RouteHelper.getLoginPage());
           } else {
-            showCustomSnackBar(status.message, title: "Error");
+            showCustomSnackBar(status.message, title: AppMessage.ERROR);
           }
         });
       }
@@ -52,7 +54,7 @@ class ChangePasswordPage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: BigText(
-          text: "Đổi mật khẩu",
+          text: AppMessage.CHANGE_PASSWORD,
           size: Dimensions.fontSize25,
           color: AppColor.mainColor,
         ),
@@ -73,7 +75,7 @@ class ChangePasswordPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SmallText(
-                text: "Mật khẩu hiện tại",
+                text: AppMessage.CURRENT_PASSWORD,
                 size: Dimensions.fontSize16,
               ),
               SizedBox(
@@ -92,7 +94,7 @@ class ChangePasswordPage extends StatelessWidget {
                 height: Dimensions.height10,
               ),
               SmallText(
-                text: "Mật khẩu mới",
+                text: AppMessage.NEW_PASSWORD,
                 size: Dimensions.fontSize16,
               ),
               SizedBox(
@@ -111,7 +113,7 @@ class ChangePasswordPage extends StatelessWidget {
                 height: Dimensions.height10,
               ),
               SmallText(
-                text: "Nhắc lại mật khẩu",
+                text: AppMessage.RENEW_PASSWORD,
                 size: Dimensions.fontSize16,
               ),
               SizedBox(
@@ -136,10 +138,6 @@ class ChangePasswordPage extends StatelessWidget {
                   onPressed: () {
                     changePassword();
                   },
-                  child: BigText(
-                    text: "Cập nhật",
-                    color: Colors.white,
-                  ),
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all(AppColor.mainColor),
@@ -148,6 +146,10 @@ class ChangePasswordPage extends StatelessWidget {
                             borderRadius:
                                 BorderRadius.circular(Dimensions.radius15),
                             side: BorderSide(color: AppColor.mainColor))),
+                  ),
+                  child: BigText(
+                    text: AppMessage.UPDATE,
+                    color: Colors.white,
                   ),
                 ),
               ),

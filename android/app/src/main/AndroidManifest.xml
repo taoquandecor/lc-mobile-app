@@ -1,9 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lcmobileapp">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="lcmobileapp"
+        android:label="LCMobileApp"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher" android:usesCleartextTraffic="true" android:requestLegacyExternalStorage="true" >
         <activity
             android:name=".MainActivity"
             android:exported="true"

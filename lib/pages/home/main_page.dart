@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:lcmobileapp/pages/operation/operation_by_shift.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
+import 'package:lcmobileapp/utils/app_message.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/app_icon.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
-import 'package:lcmobileapp/widgets/drop_down_widget.dart';
+import 'package:lcmobileapp/widgets/edit_box_widget.dart';
 import 'package:lcmobileapp/widgets/info_widget.dart';
 import 'package:lcmobileapp/widgets/progress_widget.dart';
 
-class MainPage extends StatelessWidget {
-  _showModalBottomSheet(context) {
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  int _currentIndex = 0;
+  String _selectedOperationValue = "";
+  String _selectedVesselValue = "";
+  String _selectedConsigneelValue = "";
+  String _selectedCargoValue = "";
+  var _fromDate = TextEditingController();
+  var _toDate = TextEditingController();
+
+  void _showModalBottomSheet(context) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -20,65 +36,232 @@ class MainPage extends StatelessWidget {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       builder: (BuildContext context) {
         return Container(
-          height: 500,
-          color: Colors.transparent, //could change this to Color(0xFF737373),
-          //so you don't have to change MaterialApp canvasColor
+          height: Dimensions.pageBottomModel,
+          color: Colors.transparent,
           child: SingleChildScrollView(
             child: Container(
-                padding: EdgeInsets.only(
-                    left: Dimensions.width15, right: Dimensions.width15),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: Dimensions.height20,
+              padding: EdgeInsets.only(
+                  left: Dimensions.width15, right: Dimensions.width15),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: Dimensions.height45,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          iconSize: Dimensions.iconSize24,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.close),
+                        )
+                      ],
                     ),
-                    const DropDownWidget(
-                      hint: "Điểm khai thác",
-                      value: "0",
-                    ),
-                    SizedBox(
-                      height: Dimensions.height10,
-                    ),
-                    const DropDownWidget(
-                      hint: "Chọn tầu",
-                      value: "0",
-                    ),
-                    SizedBox(
-                      height: Dimensions.height10,
-                    ),
-                    const DropDownWidget(
-                      hint: "Chọn chủ hàng",
-                      value: "0",
-                    ),
-                    SizedBox(
-                      height: Dimensions.height10,
-                    ),
-                    const DropDownWidget(
-                      hint: "Chọn loại hàng",
-                      value: "0",
-                    ),
-                    // SizedBox(
-                    //   height: Dimensions.height10,
-                    // ),
-                    // Column(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: [
-                    //     EditBoxIconWidget(
-                    //         hint: "Từ ngày", icon: Icons.calendar_month),
-                    //     EditBoxIconWidget(
-                    //         hint: "Đến ngày", icon: Icons.calendar_month),
-                    //   ],
-                    // ),
-                    SizedBox(
-                      height: Dimensions.height10,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: BigText(
-                        text: "Tìm kiếm",
-                        color: Colors.white,
+                  ),
+                  // Điểm khai thác
+                  SizedBox(
+                    height: Dimensions.height45 * 1.2,
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: Dimensions.width10,
+                            horizontal: Dimensions.width10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(Dimensions.radius15),
+                          ),
+                        ),
                       ),
+                      value: _selectedOperationValue == ""
+                          ? null
+                          : _selectedOperationValue,
+                      iconSize: Dimensions.height20 + Dimensions.height10,
+                      isExpanded: true,
+                      hint: const Text(AppMessage.SELECT_OPERATION_TERMINAL),
+                      // items: _bargeVoyageList.map((item) {
+                      //   return DropdownMenuItem<String>(
+                      //     value: item.id.toString(),
+                      //     child: Text(item.bargeCode.toString()),
+                      //   );
+                      // }).toList(),
+                      items: [],
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedOperationValue = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10 / 2,
+                  ),
+                  // Chọn tầu
+                  SizedBox(
+                    height: Dimensions.height45 * 1.2,
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: Dimensions.width10,
+                            horizontal: Dimensions.width10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(Dimensions.radius15),
+                          ),
+                        ),
+                      ),
+                      value: _selectedVesselValue == ""
+                          ? null
+                          : _selectedVesselValue,
+                      iconSize: Dimensions.height20 + Dimensions.height10,
+                      isExpanded: true,
+                      hint: const Text(AppMessage.SELECT_VESSEL),
+                      // items: _bargeVoyageList.map((item) {
+                      //   return DropdownMenuItem<String>(
+                      //     value: item.id.toString(),
+                      //     child: Text(item.bargeCode.toString()),
+                      //   );
+                      // }).toList(),
+                      items: [],
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedVesselValue = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10 / 2,
+                  ),
+                  // Chọn chủ hàng
+                  SizedBox(
+                    height: Dimensions.height45 * 1.2,
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: Dimensions.width10,
+                            horizontal: Dimensions.width10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(Dimensions.radius15),
+                          ),
+                        ),
+                      ),
+                      value: _selectedConsigneelValue == ""
+                          ? null
+                          : _selectedConsigneelValue,
+                      iconSize: Dimensions.height20 + Dimensions.height10,
+                      isExpanded: true,
+                      hint: const Text(AppMessage.SELECT_CONSIGNEE),
+                      // items: _bargeVoyageList.map((item) {
+                      //   return DropdownMenuItem<String>(
+                      //     value: item.id.toString(),
+                      //     child: Text(item.bargeCode.toString()),
+                      //   );
+                      // }).toList(),
+                      items: [],
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedConsigneelValue = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10 / 2,
+                  ),
+                  // Chọn loại hàng
+                  SizedBox(
+                    height: Dimensions.height45 * 1.2,
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: Dimensions.width10,
+                            horizontal: Dimensions.width10),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(Dimensions.radius15),
+                          ),
+                        ),
+                      ),
+                      value: _selectedCargoValue == ""
+                          ? null
+                          : _selectedCargoValue,
+                      iconSize: Dimensions.height20 + Dimensions.height10,
+                      isExpanded: true,
+                      hint: const Text(AppMessage.SELECT_CARGO),
+                      // items: _bargeVoyageList.map((item) {
+                      //   return DropdownMenuItem<String>(
+                      //     value: item.id.toString(),
+                      //     child: Text(item.bargeCode.toString()),
+                      //   );
+                      // }).toList(),
+                      items: [],
+                      onChanged: (String? value) {
+                        setState(() {
+                          _selectedCargoValue = value.toString();
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10 / 2,
+                  ),
+                  // từ ngày đến ngày
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 180,
+                        child: TextFormField(
+                          controller: _fromDate,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.calendar_month),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: Dimensions.width10,
+                                horizontal: Dimensions.width10),
+                            hintText: "Từ ngày",
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.radius15),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 180,
+                        child: TextFormField(
+                          controller: _toDate,
+                          readOnly: true,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.calendar_month),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: Dimensions.width10,
+                                horizontal: Dimensions.width10),
+                            hintText: "Đến ngày",
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.radius15),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10 / 2,
+                  ),
+                  SizedBox(
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {},
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(AppColor.mainColor),
@@ -88,59 +271,83 @@ class MainPage extends StatelessWidget {
                                     BorderRadius.circular(Dimensions.radius15),
                                 side: BorderSide(color: AppColor.mainColor))),
                       ),
+                      child: BigText(
+                        text: AppMessage.SEARCH,
+                        color: Colors.white,
+                      ),
                     ),
-                  ],
-                )),
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       },
     );
   }
 
-  const MainPage({super.key});
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: AppColor.backgroundWhiteColor,
         appBar: AppBar(
-          backgroundColor: AppColor.backgroundColor,
+          backgroundColor: AppColor.backgroundWhiteColor,
           toolbarHeight: Dimensions.height10 / 2,
           elevation: 0,
           bottom: TabBar(
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
             unselectedLabelColor: AppColor.backgroundColor,
             indicatorSize: TabBarIndicatorSize.tab,
             tabs: [
               Tab(
                 icon: AppIcon(
                   icon: Icons.people_sharp,
-                  iconColor: AppColor.mainColor,
-                  iconSize: Dimensions.fontSize16,
-                  backgroundColor: AppColor.backgroundColor,
+                  iconColor:
+                      _currentIndex == 0 ? AppColor.mainColor : Colors.grey,
+                  iconSize: Dimensions.iconSize24,
+                  backgroundColor: AppColor.backgroundWhiteColor,
                 ),
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
-                    text: "Chủ hàng",
-                    size: Dimensions.fontSize12,
-                    color: AppColor.mainColor,
+                    text: AppMessage.CONSIGNEE,
+                    size: Dimensions.fontSize16,
+                    color:
+                        _currentIndex == 0 ? AppColor.mainColor : Colors.grey,
                   ),
                 ),
               ),
               Tab(
                 icon: AppIcon(
                   icon: Icons.directions_boat_outlined,
-                  iconColor: AppColor.mainColor,
-                  iconSize: Dimensions.fontSize16,
-                  backgroundColor: AppColor.backgroundColor,
+                  iconColor:
+                      _currentIndex == 1 ? AppColor.mainColor : Colors.grey,
+                  iconSize: Dimensions.iconSize24,
+                  backgroundColor: AppColor.backgroundWhiteColor,
                 ),
                 child: Align(
                     alignment: Alignment.center,
                     child: BigText(
-                      text: "Sà lan",
-                      size: Dimensions.fontSize12,
-                      color: AppColor.mainColor,
+                      text: AppMessage.BARGE,
+                      size: Dimensions.fontSize16,
+                      color:
+                          _currentIndex == 1 ? AppColor.mainColor : Colors.grey,
                     )),
               ),
             ],
@@ -160,7 +367,7 @@ class MainPage extends StatelessWidget {
                         AppIcon(
                           icon: Icons.directions_boat_rounded,
                           iconSize: Dimensions.iconSize16,
-                          backgroundColor: AppColor.backgroundColor,
+                          backgroundColor: AppColor.backgroundWhiteColor,
                         ),
                         BigText(
                           text: "NORD.POLLUX",
@@ -169,7 +376,7 @@ class MainPage extends StatelessWidget {
                         AppIcon(
                           icon: Icons.location_on,
                           iconSize: Dimensions.iconSize16,
-                          backgroundColor: AppColor.backgroundColor,
+                          backgroundColor: AppColor.backgroundWhiteColor,
                         ),
                         BigText(
                           text: "Cảng Trường An-Hải Dương",
@@ -183,7 +390,7 @@ class MainPage extends StatelessWidget {
                           child: AppIcon(
                             icon: Icons.filter_alt_sharp,
                             iconSize: Dimensions.iconSize16,
-                            backgroundColor: AppColor.backgroundColor,
+                            backgroundColor: AppColor.backgroundWhiteColor,
                             iconColor: AppColor.mainColor,
                           ),
                         ),
@@ -198,7 +405,7 @@ class MainPage extends StatelessWidget {
                         AppIcon(
                           icon: Icons.calendar_month_sharp,
                           iconSize: Dimensions.iconSize16,
-                          backgroundColor: AppColor.backgroundColor,
+                          backgroundColor: AppColor.backgroundWhiteColor,
                         ),
                         BigText(
                           text: "06:00 22/09 - 18:00 25/09",
@@ -247,7 +454,7 @@ class MainPage extends StatelessWidget {
                         AppIcon(
                           icon: Icons.calendar_month_sharp,
                           iconSize: Dimensions.iconSize16,
-                          backgroundColor: AppColor.backgroundColor,
+                          backgroundColor: AppColor.backgroundWhiteColor,
                           iconColor: AppColor.mainColor,
                         ),
                         BigText(
@@ -284,7 +491,7 @@ class MainPage extends StatelessWidget {
                         AppIcon(
                           icon: Icons.bar_chart_outlined,
                           iconSize: Dimensions.iconSize16,
-                          backgroundColor: AppColor.backgroundColor,
+                          backgroundColor: AppColor.backgroundWhiteColor,
                           iconColor: AppColor.mainColor,
                         ),
                         BigText(

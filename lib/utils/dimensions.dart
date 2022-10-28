@@ -7,6 +7,7 @@ class Dimensions {
   static double pageProfileView = screenHeight / 2.73;
   static double pageListView = screenHeight / 1.71;
   static double pageLoginView = screenHeight / 1.139;
+  static double pageBottomModel = screenHeight / 1.37;
 
   static double height5 = screenHeight / 136.68;
   static double height10 = screenHeight / 68.34;
@@ -23,6 +24,7 @@ class Dimensions {
   static double fontSize12 = screenHeight / 56.95;
   static double fontSize14 = screenHeight / 48.81;
   static double fontSize16 = screenHeight / 42.71;
+  static double fontSize20 = screenHeight / 34.17;
   static double fontSize25 = screenHeight / 27.34;
 
   static double radius80 = screenHeight / 8.54;

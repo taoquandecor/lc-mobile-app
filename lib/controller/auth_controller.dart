@@ -1,5 +1,6 @@
 import 'package:lcmobileapp/data/api/api_client.dart';
 import 'package:lcmobileapp/data/repository/auth_repo.dart';
+import 'package:lcmobileapp/models/response_error_model.dart';
 import 'package:lcmobileapp/models/response_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -24,12 +25,57 @@ class AuthController extends GetxController implements GetxService {
 
     if (response.statusCode == 200) {
       if (response.body["Code"] != 200) {
-        responseModel = ResponseModel(false, response.body["Errors"]);
+        ResponseErrorModel responseErrorModel = ResponseErrorModel();
+        responseErrorModel = ResponseErrorModel.fromJson(response.body);
+
+        String errorMessage = "";
+
+        responseErrorModel.errors!.forEach((key, value) {
+          errorMessage += key;
+          errorMessage += ": ";
+          errorMessage += value[0].toString();
+          errorMessage += "\r";
+        });
+
+        responseModel = ResponseModel(false, errorMessage);
       } else {
         var data = response.body["Data"];
         authRepo.saveUserToken(data["Token"]);
+        authRepo.saveUserTerminal(data["User"]["TerminalId"]);
         print('My token is ' + data["Token"].toString());
         _userModel = UserModel.fromJson(data["User"]);
+        responseModel = ResponseModel(true, response.body["Message"]);
+      }
+    } else {
+      responseModel = ResponseModel(false, response.statusText!);
+    }
+    _isLoading = false;
+    update();
+    return responseModel;
+  }
+
+  Future<ResponseModel> forgot(String userName) async {
+    _isLoading = true;
+    update();
+    Response response = await authRepo.forgot(userName);
+    late ResponseModel responseModel;
+
+    if (response.statusCode == 200) {
+      if (response.body["Code"] != 200) {
+        ResponseErrorModel responseErrorModel = ResponseErrorModel();
+        responseErrorModel = ResponseErrorModel.fromJson(response.body);
+
+        String errorMessage = "";
+
+        responseErrorModel.errors!.forEach((key, value) {
+          errorMessage += key;
+          errorMessage += ": ";
+          errorMessage += value[0].toString();
+          errorMessage += "\r";
+        });
+
+        responseModel = ResponseModel(false, errorMessage);
+      } else {
         responseModel = ResponseModel(true, response.body["Message"]);
       }
     } else {

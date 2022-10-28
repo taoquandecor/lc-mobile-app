@@ -6,6 +6,7 @@ import 'package:lcmobileapp/models/profile_model.dart';
 import 'package:lcmobileapp/pages/account/profile_page.dart';
 import 'package:lcmobileapp/route/route_helper.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
+import 'package:lcmobileapp/utils/app_message.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
@@ -41,20 +42,20 @@ class UserInfoPage extends StatelessWidget {
       String phone = phoneTextEdit.text.trim();
 
       if (!GetUtils.isEmail(email)) {
-        showCustomSnackBar("Type in a valid email address",
-            title: "Valid email address");
+        showCustomSnackBar(AppMessage.INVALID_EMAIL_MESSAGE, title: "Email");
       } else if (email.isEmpty) {
-        showCustomSnackBar("Type in a your email address",
-            title: "Email address");
+        showCustomSnackBar(AppMessage.EMPTY_EMAIL_MESSAGE, title: "Email");
       } else if (name.isEmpty) {
-        showCustomSnackBar("Type in a your name", title: "DisplayName");
+        showCustomSnackBar(AppMessage.EMPTY_FULLNAME_MESSAGE,
+            title: AppMessage.DISPLAYNAME);
       } else if (phone.isEmpty) {
-        showCustomSnackBar("Type in a your phone", title: "Phone number");
+        showCustomSnackBar(AppMessage.EMPTY_PHONE_MESSAGE,
+            title: AppMessage.PHONE_NUMBER);
       } else {
         userController.updateProfile(name, phone, email).then((status) {
           if (status.isSuccess) {
             showCustomSnackBar(status.message,
-                title: "Profile",
+                title: AppMessage.PROFILE,
                 backColor: Colors.green,
                 textColor: Colors.black);
             Get.find<UserController>().getUserInfo();
@@ -70,7 +71,7 @@ class UserInfoPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColor.backgroundWhiteColor,
         title: BigText(
-          text: "Thông tin người dùng",
+          text: AppMessage.ACCOUNT_INFORMATION,
           size: Dimensions.fontSize25,
           color: AppColor.mainColor,
         ),
@@ -100,7 +101,7 @@ class UserInfoPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SmallText(
-                          text: "Tên đăng nhập",
+                          text: AppMessage.USERNAME,
                           size: Dimensions.fontSize16,
                         ),
                         SizedBox(
@@ -121,7 +122,7 @@ class UserInfoPage extends StatelessWidget {
                           height: Dimensions.height10,
                         ),
                         SmallText(
-                          text: "Nhóm quyền",
+                          text: AppMessage.GROUP_ROLE,
                           size: Dimensions.fontSize16,
                         ),
                         SizedBox(
@@ -161,7 +162,7 @@ class UserInfoPage extends StatelessWidget {
                           height: Dimensions.height10,
                         ),
                         SmallText(
-                          text: "Tên đầy đủ",
+                          text: AppMessage.FULL_NAME,
                           size: Dimensions.fontSize16,
                         ),
                         SizedBox(
@@ -180,7 +181,7 @@ class UserInfoPage extends StatelessWidget {
                           height: Dimensions.height10,
                         ),
                         SmallText(
-                          text: "Số điện thoại",
+                          text: AppMessage.PHONE_NUMBER,
                           size: Dimensions.fontSize16,
                         ),
                         SizedBox(
@@ -205,10 +206,6 @@ class UserInfoPage extends StatelessWidget {
                             onPressed: () {
                               updateProfile(userController);
                             },
-                            child: BigText(
-                              text: "Cập nhật",
-                              color: Colors.white,
-                            ),
                             style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all(AppColor.mainColor),
@@ -219,6 +216,10 @@ class UserInfoPage extends StatelessWidget {
                                           Dimensions.radius15),
                                       side: BorderSide(
                                           color: AppColor.mainColor))),
+                            ),
+                            child: BigText(
+                              text: AppMessage.UPDATE,
+                              color: Colors.white,
                             ),
                           ),
                         ),

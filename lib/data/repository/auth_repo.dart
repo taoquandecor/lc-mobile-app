@@ -17,6 +17,12 @@ class AuthRepo extends GetxService {
     });
   }
 
+  Future<Response> forgot(String userName) async {
+    return await apiClient.postData(AppContants.FORGOT_URL, {
+      "AccountCode": userName,
+    });
+  }
+
   Future<String> getUserToken() async {
     return await sharedPreferences.getString(AppContants.TOKEN) ?? "None";
   }
@@ -27,8 +33,10 @@ class AuthRepo extends GetxService {
 
   bool clearSharedData() {
     sharedPreferences.remove(AppContants.TOKEN);
+    sharedPreferences.remove(AppContants.TERMINAL);
     apiClient.token = '';
     apiClient.updateHeader('');
+    apiClient.terminal = '';
     return true;
   }
 
@@ -36,5 +44,14 @@ class AuthRepo extends GetxService {
     apiClient.token = token;
     apiClient.updateHeader(token);
     return await sharedPreferences.setString(AppContants.TOKEN, token);
+  }
+
+  Future<void> saveUserTerminal(String terminal) async {
+    try {
+      apiClient.terminal = terminal;
+      await sharedPreferences.setString(AppContants.TERMINAL, terminal);
+    } catch (e) {
+      throw e.toString();
+    }
   }
 }

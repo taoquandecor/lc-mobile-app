@@ -30,6 +30,7 @@ class UserRepo extends GetxService {
 
   bool clearSharedData() {
     sharedPreferences.remove(AppContants.TOKEN);
+    sharedPreferences.remove(AppContants.TERMINAL);
     apiClient.token = '';
     apiClient.updateHeader('');
     return true;

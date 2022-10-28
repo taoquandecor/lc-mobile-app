@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:lcmobileapp/base/custom_loader.dart';
 import 'package:lcmobileapp/controller/auth_controller.dart';
 import 'package:lcmobileapp/route/route_helper.dart';
+import 'package:lcmobileapp/utils/app_color.dart';
 import 'package:lcmobileapp/utils/app_constants.dart';
+import 'package:lcmobileapp/utils/app_message.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:get/get.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
@@ -41,12 +43,12 @@ class ProfilePage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             BigText(
-                              text: "Thiết lập",
+                              text: AppMessage.SETTING,
                               color: Colors.white,
                               size: Dimensions.fontSize16,
                             ),
                             BigText(
-                              text: "Profile",
+                              text: AppMessage.PROFILE,
                               color: Colors.white,
                               size: Dimensions.fontSize25,
                             ),
@@ -58,7 +60,7 @@ class ProfilePage extends StatelessWidget {
                                 }
                               }),
                               child: BigText(
-                                  text: "Đăng xuất",
+                                  text: AppMessage.LOG_OUT,
                                   color: Colors.white,
                                   size: Dimensions.fontSize16),
                             ),
@@ -143,12 +145,8 @@ class ProfilePage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   BigText(
-                                    text: "Tổ chức: ",
-                                    size: Dimensions.fontSize16,
-                                  ),
-                                  BigText(
-                                    text: authController
-                                        .userModel.organizationName!,
+                                    text:
+                                        "${AppMessage.ORGANIZATION}: ${authController.userModel.organizationName ?? ""}",
                                     size: Dimensions.fontSize16,
                                   ),
                                 ],
@@ -173,7 +171,7 @@ class ProfilePage extends StatelessWidget {
                                     Get.toNamed(RouteHelper.getUserInfoPage());
                                   },
                                   child: const IconAndTextWidget(
-                                    text: "Thông tin tài khoản",
+                                    text: AppMessage.ACCOUNT_INFORMATION,
                                     icon: Icons.person,
                                     iconColor: Colors.orange,
                                   ),
@@ -184,8 +182,9 @@ class ProfilePage extends StatelessWidget {
                                 Container(
                                   width: Dimensions.screenWidth,
                                   height: 1.2,
-                                  margin: EdgeInsets.only(top: 4),
-                                  color: Color(0xFFFccc7c5),
+                                  margin: EdgeInsets.only(
+                                      top: Dimensions.height20 / 5),
+                                  color: AppColor.lineColor,
                                 ),
                                 SizedBox(
                                   height: Dimensions.height10,
@@ -196,7 +195,7 @@ class ProfilePage extends StatelessWidget {
                                         RouteHelper.getChangePasswordPage());
                                   },
                                   child: const IconAndTextWidget(
-                                    text: "Đổi mật khẩu",
+                                    text: AppMessage.CHANGE_PASSWORD,
                                     icon: Icons.key,
                                     iconColor: Colors.orange,
                                   ),
@@ -207,8 +206,9 @@ class ProfilePage extends StatelessWidget {
                                 Container(
                                   width: Dimensions.screenWidth,
                                   height: 1.2,
-                                  margin: EdgeInsets.only(top: 4),
-                                  color: Color(0xFFFccc7c5),
+                                  margin: EdgeInsets.only(
+                                      top: Dimensions.height20 / 5),
+                                  color: AppColor.lineColor,
                                 ),
                                 SizedBox(
                                   height: Dimensions.height10,
@@ -220,8 +220,8 @@ class ProfilePage extends StatelessWidget {
                                       Get.offNamed(RouteHelper.getLoginPage());
                                     }
                                   },
-                                  child: IconAndTextWidget(
-                                    text: "Đăng xuất",
+                                  child: const IconAndTextWidget(
+                                    text: AppMessage.LOG_OUT,
                                     icon: Icons.logout,
                                     iconColor: Colors.orange,
                                   ),
@@ -232,8 +232,9 @@ class ProfilePage extends StatelessWidget {
                                 Container(
                                   width: Dimensions.screenWidth,
                                   height: 1.2,
-                                  margin: EdgeInsets.only(top: 4),
-                                  color: Color(0xFFFccc7c5),
+                                  margin: EdgeInsets.only(
+                                      top: Dimensions.height20 / 5),
+                                  color: AppColor.lineColor,
                                 ),
                               ],
                             ),
