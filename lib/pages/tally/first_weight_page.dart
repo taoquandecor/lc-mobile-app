@@ -4,15 +4,12 @@ import 'package:lcmobileapp/controller/delivery_detail_controller.dart';
 import 'package:lcmobileapp/controller/user_controller.dart';
 import 'package:lcmobileapp/models/delivery_detail_model.dart';
 import 'package:lcmobileapp/models/token_timeout_model.dart';
-import 'package:lcmobileapp/pages/tally/first_weight_detail_page.dart';
 import 'package:lcmobileapp/route/route_helper.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
-import 'package:lcmobileapp/utils/app_constants.dart';
 import 'package:lcmobileapp/utils/app_message.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/app_icon.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
-import 'package:lcmobileapp/widgets/edit_box_widget.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
 import 'package:get/get.dart';
 

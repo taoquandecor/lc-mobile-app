@@ -7,7 +7,6 @@ import 'package:lcmobileapp/utils/app_color.dart';
 import 'package:lcmobileapp/utils/app_message.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
-import 'package:lcmobileapp/widgets/edit_box_widget.dart';
 import 'package:get/get.dart';
 
 class LoginPage extends StatefulWidget {

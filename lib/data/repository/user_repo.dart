@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:lcmobileapp/data/api/api_client.dart';
-import 'package:lcmobileapp/models/profile_model.dart';
 import 'package:lcmobileapp/utils/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

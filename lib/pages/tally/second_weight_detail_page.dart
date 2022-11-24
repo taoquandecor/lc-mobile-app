@@ -859,222 +859,216 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage> {
             ),
             // Nội dung cân chốt
             SingleChildScrollView(
-              child: GetBuilder<AttachmentController>(
-                builder: (attachmentController) {
-                  print(imageUrl);
-                  return Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.only(
-                        top: Dimensions.height10,
-                        left: Dimensions.width10,
-                        right: Dimensions.width10,
-                        bottom: Dimensions.height10),
-                    child: Column(children: [
-                      Container(
-                        height: Dimensions.height50 * 4.5,
-                        decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.radius15 / 3),
-                        ),
-                        child: Image.network(
-                          imageUrl,
-                          headers: AppContants.HEADER_IMAGE,
-                          errorBuilder: (context, error, stackTrace) =>
-                              Image.asset("assets/images/no_data.png"),
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                        ),
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.only(
+                    top: Dimensions.height10,
+                    left: Dimensions.width10,
+                    right: Dimensions.width10,
+                    bottom: Dimensions.height10),
+                child: Column(children: [
+                  Container(
+                    height: Dimensions.height50 * 4.5,
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(Dimensions.radius15 / 3),
+                    ),
+                    child: Image.network(
+                      imageUrl,
+                      headers: AppContants.HEADER_IMAGE,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Image.asset("assets/images/no_data.png"),
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10,
+                  ),
+                  //Hàng còn lại
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SmallText(
+                        text: AppMessage.REMAIN_CARGO,
+                        size: Dimensions.fontSize16,
                       ),
-                      SizedBox(
-                        height: Dimensions.height10,
-                      ),
-                      //Hàng còn lại
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          SmallText(
-                            text: AppMessage.REMAIN_CARGO,
+                          BigText(
+                            text:
+                                "${f.format(int.parse(_deliveryDetail.remainQuantity ?? "0"))} (Kg)",
                             size: Dimensions.fontSize16,
+                            color: AppColor.mainColor,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              BigText(
-                                text:
-                                    "${f.format(int.parse(_deliveryDetail.remainQuantity ?? "0"))} (Kg)",
-                                size: Dimensions.fontSize16,
-                                color: AppColor.mainColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ],
-                          )
                         ],
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: Dimensions.screenWidth,
+                    height: 1.2,
+                    margin: const EdgeInsets.only(top: 0),
+                    color: AppColor.lineColor,
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10,
+                  ),
+                  //Cân bì
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SmallText(
+                        text: (_deliveryDetail.cargoDirection ==
+                                    AppContants.UNLOADING ||
+                                _deliveryDetail.cargoDirection ==
+                                    AppContants.STORAGE_EXPORT)
+                            ? AppMessage.TARE_WEIGHT
+                            : AppMessage.GROSS_WEIGHT,
+                        size: Dimensions.fontSize16,
                       ),
-                      Container(
-                        width: Dimensions.screenWidth,
-                        height: 1.2,
-                        margin: const EdgeInsets.only(top: 0),
-                        color: AppColor.lineColor,
-                      ),
-                      SizedBox(
-                        height: Dimensions.height10,
-                      ),
-                      //Cân bì
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          SmallText(
+                          BigText(
                             text: (_deliveryDetail.cargoDirection ==
                                         AppContants.UNLOADING ||
                                     _deliveryDetail.cargoDirection ==
                                         AppContants.STORAGE_EXPORT)
-                                ? AppMessage.TARE_WEIGHT
-                                : AppMessage.GROSS_WEIGHT,
+                                ? "${f.format(int.parse(_deliveryDetail.tareWeight ?? "0"))} (Kg)"
+                                : "${f.format(int.parse(_deliveryDetail.grossWeight ?? "0"))} (Kg)",
                             size: Dimensions.fontSize16,
+                            color: AppColor.mainColor,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              BigText(
-                                text: (_deliveryDetail.cargoDirection ==
-                                            AppContants.UNLOADING ||
-                                        _deliveryDetail.cargoDirection ==
-                                            AppContants.STORAGE_EXPORT)
-                                    ? "${f.format(int.parse(_deliveryDetail.tareWeight ?? "0"))} (Kg)"
-                                    : "${f.format(int.parse(_deliveryDetail.grossWeight ?? "0"))} (Kg)",
-                                size: Dimensions.fontSize16,
-                                color: AppColor.mainColor,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ],
-                          )
                         ],
-                      ),
-                      Container(
-                        width: Dimensions.screenWidth,
-                        height: 1.2,
-                        margin: const EdgeInsets.only(top: 0),
-                        color: AppColor.lineColor,
-                      ),
-                      SizedBox(
-                        height: Dimensions.height10,
-                      ),
-                      //Hàng
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SmallText(
-                            text: AppMessage.NET_WEIGHT,
-                            size: Dimensions.fontSize16,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              BigText(
-                                text: "${f.format(_netWeight)} (Kg)",
-                                size: Dimensions.fontSize16,
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      Container(
-                        width: Dimensions.screenWidth,
-                        height: 1.2,
-                        margin: const EdgeInsets.only(top: 0),
-                        color: AppColor.lineColor,
-                      ),
-                      SizedBox(
-                        height: Dimensions.height10,
-                      ),
-
-                      Container(
-                        padding: EdgeInsets.only(
-                            left: Dimensions.width10 / 5,
-                            right: Dimensions.width10 / 5),
-                        child: Column(
-                          children: [
-                            // nhập số cân
-                            TextFormField(
-                              controller: weightController,
-                              onChanged: (value) {
-                                onTextChanged(value);
-                              },
-                              textAlign: TextAlign.right,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: Dimensions.width10,
-                                    horizontal: Dimensions.width10),
-                                hintText: AppMessage.INPUT_WEIGHT_NUMBER,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      Dimensions.radius15),
-                                ),
-                                prefixIcon: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      weightController.text = "";
-                                    });
-                                    onTextChanged('');
-                                  },
-                                  child: const Icon(Icons.clear),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: Dimensions.height10,
-                            ),
-                            // ghi chú
-                            EditBoxWidget(
-                              hint: AppMessage.REMARK,
-                              controller: remarkController,
-                              showClearIcon: true,
-                            ),
-
-                            // chấp nhận
-                            Container(
-                              margin: EdgeInsets.only(
-                                  top: Dimensions.height10,
-                                  left: Dimensions.width10,
-                                  right: Dimensions.width10),
-                              child: SizedBox(
-                                height: Dimensions.height45,
-                                width: Dimensions.screenWidth -
-                                    Dimensions.height20,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    updateWeightNumber();
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(
-                                        AppColor.mainColor),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                Dimensions.radius15),
-                                            side: BorderSide(
-                                                color: AppColor.mainColor))),
-                                  ),
-                                  child: BigText(
-                                    text: AppMessage.ACCEPT,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       )
-                    ]),
-                  );
-                },
+                    ],
+                  ),
+                  Container(
+                    width: Dimensions.screenWidth,
+                    height: 1.2,
+                    margin: const EdgeInsets.only(top: 0),
+                    color: AppColor.lineColor,
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10,
+                  ),
+                  //Hàng
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SmallText(
+                        text: AppMessage.NET_WEIGHT,
+                        size: Dimensions.fontSize16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          BigText(
+                            text: "${f.format(_netWeight)} (Kg)",
+                            size: Dimensions.fontSize16,
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  Container(
+                    width: Dimensions.screenWidth,
+                    height: 1.2,
+                    margin: const EdgeInsets.only(top: 0),
+                    color: AppColor.lineColor,
+                  ),
+                  SizedBox(
+                    height: Dimensions.height10,
+                  ),
+
+                  Container(
+                    padding: EdgeInsets.only(
+                        left: Dimensions.width10 / 5,
+                        right: Dimensions.width10 / 5),
+                    child: Column(
+                      children: [
+                        // nhập số cân
+                        TextFormField(
+                          controller: weightController,
+                          onChanged: (value) {
+                            onTextChanged(value);
+                          },
+                          textAlign: TextAlign.right,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: Dimensions.width10,
+                                horizontal: Dimensions.width10),
+                            hintText: AppMessage.INPUT_WEIGHT_NUMBER,
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.radius15),
+                            ),
+                            prefixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  weightController.text = "";
+                                });
+                                onTextChanged('');
+                              },
+                              child: const Icon(Icons.clear),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Dimensions.height10,
+                        ),
+                        // ghi chú
+                        EditBoxWidget(
+                          hint: AppMessage.REMARK,
+                          controller: remarkController,
+                          showClearIcon: true,
+                        ),
+
+                        // chấp nhận
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: Dimensions.height10,
+                              left: Dimensions.width10,
+                              right: Dimensions.width10),
+                          child: SizedBox(
+                            height: Dimensions.height45,
+                            width: Dimensions.screenWidth - Dimensions.height20,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                updateWeightNumber();
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                    AppColor.mainColor),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            Dimensions.radius15),
+                                        side: BorderSide(
+                                            color: AppColor.mainColor))),
+                              ),
+                              child: BigText(
+                                text: AppMessage.ACCEPT,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ]),
               ),
             ),
             // Nội dung tab trình tự

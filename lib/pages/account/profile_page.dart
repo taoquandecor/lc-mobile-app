@@ -13,18 +13,6 @@ import 'package:lcmobileapp/widgets/icon_and_text_widget.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
-
-  Future<String?> getImgUrl(url) async {
-    try {
-      Uint8List bytes = (await NetworkAssetBundle(Uri.parse(url)).load(url))
-          .buffer
-          .asUint8List();
-      return url;
-    } catch (e) {
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

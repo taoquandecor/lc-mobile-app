@@ -1,9 +1,6 @@
-import 'package:lcmobileapp/data/api/api_client.dart';
 import 'package:lcmobileapp/data/repository/auth_repo.dart';
-import 'package:lcmobileapp/models/response_error_model.dart';
 import 'package:lcmobileapp/models/response_model.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:lcmobileapp/models/user_model.dart';
 
 class AuthController extends GetxController implements GetxService {

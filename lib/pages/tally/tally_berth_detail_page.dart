@@ -14,7 +14,6 @@ import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/app_icon.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/cargo_direct_widget.dart';
-import 'package:lcmobileapp/widgets/edit_box_widget.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';

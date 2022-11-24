@@ -3,8 +3,6 @@ import 'package:lcmobileapp/base/custom_loader.dart';
 import 'package:lcmobileapp/base/show_custom_snackbar.dart';
 import 'package:lcmobileapp/controller/user_controller.dart';
 import 'package:lcmobileapp/models/profile_model.dart';
-import 'package:lcmobileapp/pages/account/profile_page.dart';
-import 'package:lcmobileapp/route/route_helper.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
 import 'package:lcmobileapp/utils/app_message.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';

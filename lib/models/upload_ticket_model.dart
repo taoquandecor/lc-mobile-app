@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class UploadTicketModel {
   String? file;
   String? entityId;

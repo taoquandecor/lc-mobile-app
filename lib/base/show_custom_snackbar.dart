@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 
 void showCustomSnackBar(String message,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lcmobileapp/route/route_helper.dart';
-import 'package:lcmobileapp/utils/app_color.dart';
 import 'helper/dependencies.dart' as dep;
 
 Future<void> main() async {

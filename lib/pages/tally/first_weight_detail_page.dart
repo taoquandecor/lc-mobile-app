@@ -3,7 +3,6 @@ import 'package:lcmobileapp/base/custom_loader.dart';
 import 'package:lcmobileapp/base/show_custom_snackbar.dart';
 import 'package:lcmobileapp/controller/delivery_detail_controller.dart';
 import 'package:lcmobileapp/controller/user_controller.dart';
-import 'package:lcmobileapp/models/delivery_detail_body_model.dart';
 import 'package:lcmobileapp/models/delivery_detail_model.dart';
 import 'package:lcmobileapp/models/token_timeout_model.dart';
 import 'package:lcmobileapp/pages/home/home_page.dart';
