@@ -2,9 +2,9 @@ class AppContants {
   static const String APP_NAME = "LCMobileApp";
   static const int APP_VERSION = 1;
 
-  //static const String BASE_URL = "http://172.18.122.53:8000";
-  //static const String BASE_URL = "https://api.cyberlogs.vn";
-  static const String BASE_URL = "http://192.168.1.11:8000";
+  static const String BASE_URL = "http://172.18.122.56:8000";
+  //static const String BASE_URL = "https://api-uat.cyberlogs.vn";
+  //static const String BASE_URL = "http://192.168.1.3:8000";
 
   // profile and user
   static const String LOGIN_URL = "/mobile/login";
@@ -26,6 +26,14 @@ class AppContants {
   static const String STORE_URI = "/mobile/delivery-details/store";
   static const String BARGE_VOYAGE_URI =
       "/mobile/delivery-details/get-barge-voyages/";
+  static const String TIME_LINES_URI =
+      "/mobile/delivery-detail/get-time-lines/";
+
+  // attachment
+  static const String GET_IMAGE_TICKET_URI =
+      "/mobile/attachment/get-image-ticket/";
+  static const String UPLOAD_IMAGE_TICKET_URI =
+      "/mobile/attachment/store/image-ticket";
 
   static const String TOKEN = "";
   static const String TERMINAL = "";

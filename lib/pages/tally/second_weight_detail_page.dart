@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lcmobileapp/base/custom_loader.dart';
 import 'package:lcmobileapp/base/show_custom_snackbar.dart';
+import 'package:lcmobileapp/controller/attachment_controller.dart';
 import 'package:lcmobileapp/controller/delivery_detail_controller.dart';
 import 'package:lcmobileapp/controller/user_controller.dart';
+import 'package:lcmobileapp/models/attachment_model.dart';
 import 'package:lcmobileapp/models/delivery_detail_body_model.dart';
 import 'package:lcmobileapp/models/delivery_detail_model.dart';
+import 'package:lcmobileapp/models/delivery_detail_work_flow_model.dart';
 import 'package:lcmobileapp/models/token_timeout_model.dart';
+import 'package:lcmobileapp/models/upload_ticket_model.dart';
 import 'package:lcmobileapp/pages/home/home_page.dart';
 import 'package:lcmobileapp/route/route_helper.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
@@ -39,6 +45,8 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage> {
   var remarkController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
 
+  late TokenTimeOut _tokenTimeOut;
+
   @override
   void initState() {
     weightController.addListener(() {
@@ -62,6 +70,41 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage> {
     var f = NumberFormat(AppContants.FORMAT_NUMER);
     var vehiclePrimaryId = _deliveryDetail.vehiclePrimaryId ?? "";
     var vehicleSecondaryId = _deliveryDetail.vehicleSecondaryId ?? "";
+    var deliveryDetailId = _deliveryDetail.id ?? "";
+
+    List<DeliveryDetailWorkFlowModel> _delvieryDetailWFList = [];
+
+    Get.find<AttachmentController>().getImageTicket(deliveryDetailId);
+    AttachmentModel _attachmentModel =
+        Get.find<AttachmentController>().attachmentModel;
+
+    String imageUrl = "";
+    if (_attachmentModel != null) {
+      imageUrl = AppContants.BASE_URL +
+          AppContants.SLASH +
+          _attachmentModel.path.toString();
+    }
+
+    // Future<Widget> getImageTicket(
+    //     AttachmentController attachmentController) async {
+    //   await attachmentController.getImageTicket(deliveryDetailId);
+    //   AttachmentModel _attachmentModel = attachmentController.attachmentModel;
+    //   if (_attachmentModel == null) {
+    //     return Image.asset("assets/images/no_data.png");
+    //   }
+    //   return Image.network(
+    //     _attachmentModel.path!,
+    //     headers: AppContants.HEADER_IMAGE,
+    //     errorBuilder: (context, error, stackTrace) =>
+    //         Image.asset("assets/images/no_data.png"),
+    //     loadingBuilder: (context, child, loadingProgress) {
+    //       if (loadingProgress == null) return child;
+    //       return const Center(
+    //         child: CircularProgressIndicator(),
+    //       );
+    //     },
+    //   );
+    // }
 
     String formatDateTime(String weightTime) {
       var outputDate = DateTime.now().toString();
@@ -73,6 +116,29 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage> {
       outputDate = outputFormat.format(inputDate);
 
       return outputDate;
+    }
+
+    void uploadImage(AttachmentController attachmentController,
+        String imagePath, String imageName) {
+      final File file = File(imagePath);
+      final bytes = file.readAsBytesSync();
+      String base64Image = 'data:image/jpg;base64,' + base64Encode(bytes);
+      String fileSize = file.lengthSync().toString();
+      UploadTicketModel _uploadTicketModel = UploadTicketModel(
+          file: base64Image,
+          entityId: deliveryDetailId,
+          fileName: imageName,
+          fileSize: fileSize,
+          type: 1);
+      attachmentController.uploadTicket(_uploadTicketModel).then((status) {
+        Navigator.pop(context);
+        if (status.isSuccess) {
+          Get.snackbar(
+              AppMessage.WEIGHT_OUT, "Upload Image Ticket Successfully");
+        } else {
+          showCustomSnackBar(status.message);
+        }
+      });
     }
 
     void onTextChanged(String text) {
@@ -96,32 +162,36 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage> {
       });
     }
 
-    void getImgFromGallary() async {
+    void getImgFromGallary(AttachmentController attachmentController) async {
       try {
         final image =
             await ImagePicker().pickImage(source: ImageSource.gallery);
+        String imageName = "";
         setState(() {
           if (image != null) {
-            print(image.path);
-            // save image into ticket here
+            imageUrl = image.path;
+            imageName = image.name;
           }
         });
+        uploadImage(attachmentController, imageUrl, imageName);
       } on PlatformException catch (e) {
-        print("Failed to pick image: $e");
+        showCustomSnackBar("Failed to pick image: $e");
       }
     }
 
-    void getImgFromCamera() async {
+    void getImgFromCamera(AttachmentController attachmentController) async {
       try {
         final image = await ImagePicker().pickImage(source: ImageSource.camera);
+        String imageName = "";
         setState(() {
           if (image != null) {
-            print(image.path);
-            // save image into ticket here
+            imageUrl = image.path;
+            imageName = image.name;
           }
         });
+        uploadImage(attachmentController, imageUrl, imageName);
       } on PlatformException catch (e) {
-        print("Failed to pick image: $e");
+        showCustomSnackBar("Failed to pick image: $e");
       }
     }
 
@@ -192,71 +262,76 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage> {
         clipBehavior: Clip.antiAliasWithSaveLayer,
         builder: (BuildContext context) {
           return Container(
-            height: Dimensions.height50 * 4,
-            color: Colors.transparent, //could change this to Color(0xFF737373),
-            //so you don't have to change MaterialApp canvasColor
-            child: SingleChildScrollView(
-              child: Container(
-                  margin: EdgeInsets.only(
-                      left: Dimensions.width15, right: Dimensions.width15),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: Dimensions.height45,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+              height: Dimensions.height50 * 4,
+              color:
+                  Colors.transparent, //could change this to Color(0xFF737373),
+              //so you don't have to change MaterialApp canvasColor
+              child: GetBuilder<AttachmentController>(
+                builder: (attachmentController) {
+                  return SingleChildScrollView(
+                    child: Container(
+                        margin: EdgeInsets.only(
+                            left: Dimensions.width15,
+                            right: Dimensions.width15),
+                        child: Column(
                           children: [
-                            IconButton(
-                              iconSize: Dimensions.iconSize24,
-                              onPressed: () {
-                                Navigator.pop(context);
+                            SizedBox(
+                              height: Dimensions.height45,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    iconSize: Dimensions.iconSize24,
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const Icon(Icons.close),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: Dimensions.height45,
+                              width: Dimensions.width20 * 18,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  getImgFromCamera(attachmentController);
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      AppColor.mainColor),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              Dimensions.radius15),
+                                          side: BorderSide(
+                                              color: AppColor.mainColor))),
+                                ),
+                                child: BigText(
+                                  text: AppMessage.TAKE_PICTURE,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: Dimensions.height20,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                getImgFromGallary(attachmentController);
                               },
-                              icon: const Icon(Icons.close),
+                              child: BigText(
+                                text: AppMessage.CHOOSE_IMAGE_FROM_LIBRARY,
+                                size: Dimensions.fontSize20,
+                                color: AppColor.mainColor,
+                              ),
                             )
                           ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: Dimensions.height45,
-                        width: Dimensions.width20 * 18,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            getImgFromCamera();
-                          },
-                          style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(AppColor.mainColor),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.radius15),
-                                    side:
-                                        BorderSide(color: AppColor.mainColor))),
-                          ),
-                          child: BigText(
-                            text: AppMessage.TAKE_PICTURE,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: Dimensions.height20,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          getImgFromGallary();
-                        },
-                        child: BigText(
-                          text: AppMessage.CHOOSE_IMAGE_FROM_LIBRARY,
-                          size: Dimensions.fontSize20,
-                          color: AppColor.mainColor,
-                        ),
-                      )
-                    ],
-                  )),
-            ),
-          );
+                        )),
+                  );
+                },
+              ));
         },
       );
     }
@@ -739,7 +814,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage> {
                 ],
               ),
             ),
-            // Nội dung phiếu cân
+            // Chụp ảnh phiếu cân
             Container(
               color: Colors.white,
               padding: EdgeInsets.only(
@@ -784,256 +859,295 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage> {
             ),
             // Nội dung cân chốt
             SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
-                padding: EdgeInsets.only(
-                    top: Dimensions.height10,
-                    left: Dimensions.width10,
-                    right: Dimensions.width10,
-                    bottom: Dimensions.height10),
-                child: Column(children: [
-                  Container(
-                    height: Dimensions.height50 * 4.5,
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(Dimensions.radius15 / 3),
-                      image: const DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage("assets/images/no_data.png"),
+              child: GetBuilder<AttachmentController>(
+                builder: (attachmentController) {
+                  print(imageUrl);
+                  return Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.only(
+                        top: Dimensions.height10,
+                        left: Dimensions.width10,
+                        right: Dimensions.width10,
+                        bottom: Dimensions.height10),
+                    child: Column(children: [
+                      Container(
+                        height: Dimensions.height50 * 4.5,
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(Dimensions.radius15 / 3),
+                        ),
+                        child: Image.network(
+                          imageUrl,
+                          headers: AppContants.HEADER_IMAGE,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Image.asset("assets/images/no_data.png"),
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  //Hàng còn lại
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SmallText(
-                        text: AppMessage.REMAIN_CARGO,
-                        size: Dimensions.fontSize16,
+                      SizedBox(
+                        height: Dimensions.height10,
                       ),
+                      //Hàng còn lại
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          BigText(
-                            text:
-                                "${f.format(int.parse(_deliveryDetail.remainQuantity ?? "0"))} (Kg)",
+                          SmallText(
+                            text: AppMessage.REMAIN_CARGO,
                             size: Dimensions.fontSize16,
-                            color: AppColor.mainColor,
-                            fontWeight: FontWeight.bold,
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              BigText(
+                                text:
+                                    "${f.format(int.parse(_deliveryDetail.remainQuantity ?? "0"))} (Kg)",
+                                size: Dimensions.fontSize16,
+                                color: AppColor.mainColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ],
+                          )
                         ],
-                      )
-                    ],
-                  ),
-                  Container(
-                    width: Dimensions.screenWidth,
-                    height: 1.2,
-                    margin: const EdgeInsets.only(top: 0),
-                    color: AppColor.lineColor,
-                  ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  //Cân bì
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SmallText(
-                        text: (_deliveryDetail.cargoDirection ==
-                                    AppContants.UNLOADING ||
-                                _deliveryDetail.cargoDirection ==
-                                    AppContants.STORAGE_EXPORT)
-                            ? AppMessage.TARE_WEIGHT
-                            : AppMessage.GROSS_WEIGHT,
-                        size: Dimensions.fontSize16,
                       ),
+                      Container(
+                        width: Dimensions.screenWidth,
+                        height: 1.2,
+                        margin: const EdgeInsets.only(top: 0),
+                        color: AppColor.lineColor,
+                      ),
+                      SizedBox(
+                        height: Dimensions.height10,
+                      ),
+                      //Cân bì
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          BigText(
+                          SmallText(
                             text: (_deliveryDetail.cargoDirection ==
                                         AppContants.UNLOADING ||
                                     _deliveryDetail.cargoDirection ==
                                         AppContants.STORAGE_EXPORT)
-                                ? "${f.format(int.parse(_deliveryDetail.tareWeight ?? "0"))} (Kg)"
-                                : "${f.format(int.parse(_deliveryDetail.grossWeight ?? "0"))} (Kg)",
+                                ? AppMessage.TARE_WEIGHT
+                                : AppMessage.GROSS_WEIGHT,
                             size: Dimensions.fontSize16,
-                            color: AppColor.mainColor,
-                            fontWeight: FontWeight.bold,
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              BigText(
+                                text: (_deliveryDetail.cargoDirection ==
+                                            AppContants.UNLOADING ||
+                                        _deliveryDetail.cargoDirection ==
+                                            AppContants.STORAGE_EXPORT)
+                                    ? "${f.format(int.parse(_deliveryDetail.tareWeight ?? "0"))} (Kg)"
+                                    : "${f.format(int.parse(_deliveryDetail.grossWeight ?? "0"))} (Kg)",
+                                size: Dimensions.fontSize16,
+                                color: AppColor.mainColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ],
+                          )
                         ],
-                      )
-                    ],
-                  ),
-                  Container(
-                    width: Dimensions.screenWidth,
-                    height: 1.2,
-                    margin: const EdgeInsets.only(top: 0),
-                    color: AppColor.lineColor,
-                  ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  //Hàng
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SmallText(
-                        text: AppMessage.NET_WEIGHT,
-                        size: Dimensions.fontSize16,
                       ),
+                      Container(
+                        width: Dimensions.screenWidth,
+                        height: 1.2,
+                        margin: const EdgeInsets.only(top: 0),
+                        color: AppColor.lineColor,
+                      ),
+                      SizedBox(
+                        height: Dimensions.height10,
+                      ),
+                      //Hàng
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          BigText(
-                            text: "${f.format(_netWeight)} (Kg)",
+                          SmallText(
+                            text: AppMessage.NET_WEIGHT,
                             size: Dimensions.fontSize16,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              BigText(
+                                text: "${f.format(_netWeight)} (Kg)",
+                                size: Dimensions.fontSize16,
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ],
+                          )
                         ],
+                      ),
+                      Container(
+                        width: Dimensions.screenWidth,
+                        height: 1.2,
+                        margin: const EdgeInsets.only(top: 0),
+                        color: AppColor.lineColor,
+                      ),
+                      SizedBox(
+                        height: Dimensions.height10,
+                      ),
+
+                      Container(
+                        padding: EdgeInsets.only(
+                            left: Dimensions.width10 / 5,
+                            right: Dimensions.width10 / 5),
+                        child: Column(
+                          children: [
+                            // nhập số cân
+                            TextFormField(
+                              controller: weightController,
+                              onChanged: (value) {
+                                onTextChanged(value);
+                              },
+                              textAlign: TextAlign.right,
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: Dimensions.width10,
+                                    horizontal: Dimensions.width10),
+                                hintText: AppMessage.INPUT_WEIGHT_NUMBER,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radius15),
+                                ),
+                                prefixIcon: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      weightController.text = "";
+                                    });
+                                    onTextChanged('');
+                                  },
+                                  child: const Icon(Icons.clear),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: Dimensions.height10,
+                            ),
+                            // ghi chú
+                            EditBoxWidget(
+                              hint: AppMessage.REMARK,
+                              controller: remarkController,
+                              showClearIcon: true,
+                            ),
+
+                            // chấp nhận
+                            Container(
+                              margin: EdgeInsets.only(
+                                  top: Dimensions.height10,
+                                  left: Dimensions.width10,
+                                  right: Dimensions.width10),
+                              child: SizedBox(
+                                height: Dimensions.height45,
+                                width: Dimensions.screenWidth -
+                                    Dimensions.height20,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    updateWeightNumber();
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(
+                                        AppColor.mainColor),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                Dimensions.radius15),
+                                            side: BorderSide(
+                                                color: AppColor.mainColor))),
+                                  ),
+                                  child: BigText(
+                                    text: AppMessage.ACCEPT,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       )
-                    ],
-                  ),
-                  Container(
-                    width: Dimensions.screenWidth,
-                    height: 1.2,
-                    margin: const EdgeInsets.only(top: 0),
-                    color: AppColor.lineColor,
-                  ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-
-                  Container(
-                    padding: EdgeInsets.only(
-                        left: Dimensions.width10 / 5,
-                        right: Dimensions.width10 / 5),
-                    child: Column(
-                      children: [
-                        // nhập số cân
-                        TextFormField(
-                          controller: weightController,
-                          onChanged: (value) {
-                            onTextChanged(value);
-                          },
-                          textAlign: TextAlign.right,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: Dimensions.width10,
-                                horizontal: Dimensions.width10),
-                            hintText: AppMessage.INPUT_WEIGHT_NUMBER,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.circular(Dimensions.radius15),
-                            ),
-                            prefixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  weightController.text = "";
-                                });
-                                onTextChanged('');
-                              },
-                              child: const Icon(Icons.clear),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: Dimensions.height10,
-                        ),
-                        // ghi chú
-                        EditBoxWidget(
-                          hint: AppMessage.REMARK,
-                          controller: remarkController,
-                          showClearIcon: true,
-                        ),
-
-                        // chấp nhận
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: Dimensions.height10,
-                              left: Dimensions.width10,
-                              right: Dimensions.width10),
-                          child: SizedBox(
-                            height: Dimensions.height45,
-                            width: Dimensions.screenWidth - Dimensions.height20,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                updateWeightNumber();
-                              },
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    AppColor.mainColor),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            Dimensions.radius15),
-                                        side: BorderSide(
-                                            color: AppColor.mainColor))),
-                              ),
-                              child: BigText(
-                                text: AppMessage.ACCEPT,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ]),
+                    ]),
+                  );
+                },
               ),
             ),
             // Nội dung tab trình tự
             Container(
                 color: Colors.white,
-                padding: EdgeInsets.only(
+                margin: EdgeInsets.only(
                     top: Dimensions.height20,
                     left: Dimensions.width10,
                     right: Dimensions.width10,
                     bottom: Dimensions.height10),
-                child: Timeline.builder(
-                  itemCount: 5,
-                  itemBuilder: ((context, index) {
-                    return TimelineTile(
-                      oppositeContents: Padding(
-                        padding: EdgeInsets.only(
-                          left: Dimensions.width10,
-                          right: Dimensions.width10,
-                        ),
-                        child: BigText(
-                          text: '16:34 - 25/09',
-                          size: Dimensions.fontSize14,
-                        ),
-                      ),
-                      contents: Card(
-                        child: Container(
-                          padding: EdgeInsets.all(Dimensions.width10),
-                          height: 100,
-                          child: const Text(
-                            'W.TARE - Tally cân bì 13,240 (Kg) - bởi canlemon Remark: Xe có dấu hiệu làm bì',
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 20,
-                          ),
-                        ),
-                      ),
-                      node: TimelineNode(
-                        indicator: DotIndicator(
-                          color: AppColor.mainColor,
-                        ),
-                        startConnector: SolidLineConnector(
-                          color: AppColor.lineColor,
-                        ),
-                        endConnector: SolidLineConnector(
-                          color: AppColor.lineColor,
-                        ),
-                      ),
-                    );
+                child: GetBuilder<DeliveryDetailController>(
+                  builder: ((deliveryDetailWFController) {
+                    deliveryDetailWFController.getTimeLines(deliveryDetailId);
+
+                    _delvieryDetailWFList =
+                        deliveryDetailWFController.deliveryDetailWFList;
+
+                    Widget timeWidget(int index) {
+                      var outputDate = DateTime.now().toString();
+                      if (index < _delvieryDetailWFList.length) {
+                        DateTime parseDate =
+                            DateFormat(AppContants.SQL_DATETIME_FORMAT).parse(
+                                _delvieryDetailWFList[index].createdDate!);
+                        var inputDate = DateTime.parse(parseDate.toString());
+                        var outputFormat = DateFormat(AppContants.DATE_FORMAT2);
+                        outputDate = outputFormat.format(inputDate);
+                      }
+                      return BigText(
+                        text: outputDate,
+                        size: Dimensions.fontSize16,
+                      );
+                    }
+
+                    return Timeline.builder(
+                        itemCount: _delvieryDetailWFList.length,
+                        itemBuilder: ((context, index) {
+                          return TimelineTile(
+                            oppositeContents: Padding(
+                              padding: EdgeInsets.only(
+                                left: Dimensions.width10 / 2,
+                                right: Dimensions.width20,
+                              ),
+                              child: timeWidget(index),
+                            ),
+                            contents: Card(
+                              elevation: 0,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  left: Dimensions.width10 / 2,
+                                  right: Dimensions.width20,
+                                ),
+                                height: Dimensions.height50 * 2,
+                                child: Text(
+                                  "${_delvieryDetailWFList[index].workFlowCode} - ${_delvieryDetailWFList[index].workFlowName} - ${AppMessage.FOR} ${_delvieryDetailWFList[index].createByName} ${AppMessage.REMARK}: ${_delvieryDetailWFList[index].remark ?? ""}",
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 20,
+                                ),
+                              ),
+                            ),
+                            node: TimelineNode(
+                              indicator: DotIndicator(
+                                color: AppColor.mainColor,
+                              ),
+                              startConnector: SolidLineConnector(
+                                color: AppColor.lineColor,
+                              ),
+                              endConnector: SolidLineConnector(
+                                color: AppColor.lineColor,
+                              ),
+                            ),
+                          );
+                        }));
                   }),
                 )),
             // Nội dung tab lịch sử bì

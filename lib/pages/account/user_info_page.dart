@@ -112,6 +112,7 @@ class UserInfoPage extends StatelessWidget {
                           readOnly: true,
                           enabled: false,
                           decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.code),
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.circular(Dimensions.radius15),
@@ -133,6 +134,7 @@ class UserInfoPage extends StatelessWidget {
                           readOnly: true,
                           enabled: false,
                           decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.group),
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.circular(Dimensions.radius15),
@@ -152,6 +154,7 @@ class UserInfoPage extends StatelessWidget {
                         TextFormField(
                           controller: emailTextEdit,
                           decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.email),
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.circular(Dimensions.radius15),
@@ -171,6 +174,7 @@ class UserInfoPage extends StatelessWidget {
                         TextFormField(
                           controller: nameTextEdit,
                           decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.person),
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.circular(Dimensions.radius15),
@@ -190,6 +194,7 @@ class UserInfoPage extends StatelessWidget {
                         TextFormField(
                           controller: phoneTextEdit,
                           decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.phone),
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.circular(Dimensions.radius15),

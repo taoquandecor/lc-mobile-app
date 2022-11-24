@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lcmobileapp/pages/account/profile_page.dart';
+import 'package:lcmobileapp/pages/home/comming_page.dart';
 import 'package:lcmobileapp/pages/home/main_page.dart';
 import 'package:lcmobileapp/pages/tally/first_weight_page.dart';
 import 'package:lcmobileapp/pages/tally/tally_berth_page.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
 import 'package:get/get.dart';
+import 'package:lcmobileapp/utils/dimensions.dart';
+import 'package:lcmobileapp/widgets/big_text.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,9 +16,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
   List pages = [
-    const MainPage(),
+    //const MainPage(),
+    Container(),
     const FirstWeightPage(),
     const TallyBerthPage(),
     const ProfilePage(),

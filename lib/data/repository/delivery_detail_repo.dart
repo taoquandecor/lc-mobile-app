@@ -46,4 +46,9 @@ class DeliveryDetailRepo extends GetxService {
     return await apiClient
         .getData(AppContants.BARGE_VOYAGE_URI + vesselVoyageId);
   }
+
+  Future<Response> getTimeLines(String deliveryDetailId) async {
+    return await apiClient
+        .getData(AppContants.TIME_LINES_URI + deliveryDetailId);
+  }
 }

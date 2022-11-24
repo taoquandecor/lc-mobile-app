@@ -1,11 +1,10 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:lcmobileapp/data/repository/delivery_detail_repo.dart';
 import 'package:lcmobileapp/models/barge_voyage_model.dart';
 import 'package:lcmobileapp/models/delivery_detail_body_model.dart';
 import 'package:lcmobileapp/models/delivery_detail_model.dart';
+import 'package:lcmobileapp/models/delivery_detail_work_flow_model.dart';
 import 'package:lcmobileapp/models/history_weight_model.dart';
 import 'package:lcmobileapp/models/response_model.dart';
 import 'package:lcmobileapp/models/token_timeout_model.dart';
@@ -27,6 +26,10 @@ class DeliveryDetailController extends GetxController implements GetxService {
 
   List<BargeVoyageModel> _bargeVoyageList = [];
   List<BargeVoyageModel> get bargeVoyageList => _bargeVoyageList;
+
+  List<DeliveryDetailWorkFlowModel> _deliveryDetailWFList = [];
+  List<DeliveryDetailWorkFlowModel> get deliveryDetailWFList =>
+      _deliveryDetailWFList;
 
   TokenTimeOut _tokenTimeOut = TokenTimeOut(isTimeOut: false);
   TokenTimeOut get tokenTimeOut => _tokenTimeOut;
@@ -246,6 +249,46 @@ class DeliveryDetailController extends GetxController implements GetxService {
           _bargeVoyageList = [];
           _bargeVoyageList
               .addAll(BargeVoyages.fromJson(response.body).data.bargeVoyages);
+          _isLoaded = true;
+          update();
+        }
+      } else {
+        Get.snackbar(
+          AppMessage.TALLY_WEIGHT_BERTH,
+          response.statusText.toString(),
+          backgroundColor: AppColor.errorColor,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      _bargeVoyageList = [];
+      Get.snackbar(
+        AppMessage.TALLY_WEIGHT_BERTH,
+        e.toString(),
+        backgroundColor: AppColor.errorColor,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  /*
+    Lấy danh sách workflow theo id của chuyến xe
+  */
+  Future<void> getTimeLines(String deliveryDetailId) async {
+    Response response = await deliveryDetailRepo.getTimeLines(deliveryDetailId);
+
+    try {
+      if (response.statusCode == 200) {
+        if (response.body["Code"] == 406) {
+          // token timeout(
+          _tokenTimeOut = TokenTimeOut(isTimeOut: true);
+        } else {
+          _tokenTimeOut = TokenTimeOut(isTimeOut: false);
+          _deliveryDetailWFList = [];
+          _deliveryDetailWFList.addAll(
+              DeliveryDetailWorkFlows.fromJson(response.body)
+                  .data
+                  .deliveryDetailWorkFlows);
           _isLoaded = true;
           update();
         }

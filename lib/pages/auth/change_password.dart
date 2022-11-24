@@ -85,6 +85,8 @@ class ChangePasswordPage extends StatelessWidget {
                 controller: oldPassword,
                 obscureText: true,
                 decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.key),
+                  hintText: AppMessage.CURRENT_PASSWORD,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(Dimensions.radius15),
                   ),
@@ -104,6 +106,8 @@ class ChangePasswordPage extends StatelessWidget {
                 controller: newPassword,
                 obscureText: true,
                 decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.key),
+                  hintText: AppMessage.NEW_PASSWORD,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(Dimensions.radius15),
                   ),
@@ -123,6 +127,8 @@ class ChangePasswordPage extends StatelessWidget {
                 controller: reNewPassword,
                 obscureText: true,
                 decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.key),
+                  hintText: AppMessage.RENEW_PASSWORD,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(Dimensions.radius15),
                   ),

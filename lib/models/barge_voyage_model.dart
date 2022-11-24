@@ -26,7 +26,7 @@ class Data {
   List<BargeVoyageModel> get bargeVoyages => _bargeVoyages;
 
   Data({required bargeVoyages}) {
-    _bargeVoyages = _bargeVoyages;
+    _bargeVoyages = bargeVoyages;
   }
   Data.fromJson(Map<String, dynamic> json) {
     if (json['BargeVoyages'] != null) {

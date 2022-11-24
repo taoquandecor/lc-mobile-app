@@ -25,19 +25,7 @@ class AuthController extends GetxController implements GetxService {
 
     if (response.statusCode == 200) {
       if (response.body["Code"] != 200) {
-        ResponseErrorModel responseErrorModel = ResponseErrorModel();
-        responseErrorModel = ResponseErrorModel.fromJson(response.body);
-
-        String errorMessage = "";
-
-        responseErrorModel.errors!.forEach((key, value) {
-          errorMessage += key;
-          errorMessage += ": ";
-          errorMessage += value[0].toString();
-          errorMessage += "\r";
-        });
-
-        responseModel = ResponseModel(false, errorMessage);
+        responseModel = ResponseModel(false, response.body["Errors"]);
       } else {
         var data = response.body["Data"];
         authRepo.saveUserToken(data["Token"]);
@@ -62,19 +50,7 @@ class AuthController extends GetxController implements GetxService {
 
     if (response.statusCode == 200) {
       if (response.body["Code"] != 200) {
-        ResponseErrorModel responseErrorModel = ResponseErrorModel();
-        responseErrorModel = ResponseErrorModel.fromJson(response.body);
-
-        String errorMessage = "";
-
-        responseErrorModel.errors!.forEach((key, value) {
-          errorMessage += key;
-          errorMessage += ": ";
-          errorMessage += value[0].toString();
-          errorMessage += "\r";
-        });
-
-        responseModel = ResponseModel(false, errorMessage);
+        responseModel = ResponseModel(false, response.body["Errors"]);
       } else {
         responseModel = ResponseModel(true, response.body["Message"]);
       }

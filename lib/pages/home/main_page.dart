@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lcmobileapp/pages/operation/operation_by_shift.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
+import 'package:lcmobileapp/utils/app_constants.dart';
 import 'package:lcmobileapp/utils/app_message.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/app_icon.dart';
@@ -8,6 +9,8 @@ import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/edit_box_widget.dart';
 import 'package:lcmobileapp/widgets/info_widget.dart';
 import 'package:lcmobileapp/widgets/progress_widget.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -24,6 +27,18 @@ class _MainPageState extends State<MainPage> {
   String _selectedCargoValue = "";
   var _fromDate = TextEditingController();
   var _toDate = TextEditingController();
+
+  String formatDate(String date) {
+    var outputDate = DateTime.now().toString();
+
+    DateTime parseDate =
+        DateFormat(AppContants.SQL_DATETIME_FORMAT).parse(date);
+    var inputDate = DateTime.parse(parseDate.toString());
+    var outputFormat = DateFormat(AppContants.DATE_FORMAT);
+    outputDate = outputFormat.format(inputDate);
+
+    return outputDate;
+  }
 
   void _showModalBottomSheet(context) {
     showModalBottomSheet(
@@ -218,7 +233,20 @@ class _MainPageState extends State<MainPage> {
                           readOnly: true,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                DatePicker.showDatePicker(context,
+                                    showTitleActions: true,
+                                    minTime: DateTime(2018, 3, 5),
+                                    maxTime: DateTime(2030, 6, 7),
+                                    onChanged: (date) {
+                                  setState(() {
+                                    _fromDate.text =
+                                        formatDate(date.toString());
+                                  });
+                                },
+                                    currentTime: DateTime.now(),
+                                    locale: LocaleType.vi);
+                              },
                               icon: const Icon(Icons.calendar_month),
                             ),
                             contentPadding: EdgeInsets.symmetric(
@@ -239,7 +267,19 @@ class _MainPageState extends State<MainPage> {
                           readOnly: true,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                DatePicker.showDatePicker(context,
+                                    showTitleActions: true,
+                                    minTime: DateTime(2018, 3, 5),
+                                    maxTime: DateTime(2030, 6, 7),
+                                    onChanged: (date) {
+                                  setState(() {
+                                    _toDate.text = formatDate(date.toString());
+                                  });
+                                },
+                                    currentTime: DateTime.now(),
+                                    locale: LocaleType.vi);
+                              },
                               icon: const Icon(Icons.calendar_month),
                             ),
                             contentPadding: EdgeInsets.symmetric(
