@@ -263,7 +263,7 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                                         ),
                                                         BigText(
                                                           text:
-                                                              "- ${_registerTicketList[index].bargeCode!}",
+                                                              "- ${_registerTicketList[index].bargeCode ?? ""}",
                                                           size: Dimensions
                                                               .fontSize12,
                                                         ),

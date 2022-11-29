@@ -14,7 +14,10 @@ class ApiClient extends GetConnect implements GetxService {
     timeout = Duration(seconds: 30);
     token = sharedPreferences.getString(AppContants.TOKEN) ?? '';
     terminal = sharedPreferences.getString(AppContants.TERMINAL) ?? '';
-    _mainHeaders = {'Content-type': 'application/json; charset=UTF-8'};
+    _mainHeaders = {
+      'Content-type': 'application/json; charset=UTF-8',
+      'Connection': 'Keep-Alive'
+    };
     allowAutoSignedCert = true;
   }
 
@@ -22,6 +25,7 @@ class ApiClient extends GetConnect implements GetxService {
     _mainHeaders = {
       'Content-type': 'application/json; charset=UTF-8',
       'Authorization': 'Bearer $token',
+      'Connection': 'Keep-Alive'
     };
   }
 

@@ -23,7 +23,7 @@ class ProfilePage extends StatelessWidget {
               String file = AppContants.BASE_URL +
                   AppContants.SLASH +
                   authController.userModel.imagePath!;
-
+              //print(file);
               return Stack(
                 children: [
                   //background color
@@ -102,7 +102,10 @@ class ProfilePage extends StatelessWidget {
                                       Image.asset("assets/images/user.png"),
                                   loadingBuilder:
                                       (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
+                                    if (loadingProgress == null) {
+                                      return Image.asset(
+                                          "assets/images/user.png");
+                                    }
                                     return const Center(
                                       child: CircularProgressIndicator(),
                                     );

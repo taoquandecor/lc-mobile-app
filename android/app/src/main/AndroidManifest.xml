@@ -4,7 +4,7 @@
    <application
         android:label="LCMobileApp"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher" android:usesCleartextTraffic="true" android:requestLegacyExternalStorage="true" >
+        android:icon="@mipmap/icon" android:usesCleartextTraffic="true" android:requestLegacyExternalStorage="true" >
         <activity
             android:name=".MainActivity"
             android:exported="true"
