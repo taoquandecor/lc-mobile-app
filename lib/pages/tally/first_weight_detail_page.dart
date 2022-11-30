@@ -40,7 +40,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
         Get.find<DeliveryDetailController>().registerTicketList[widget.pageId];
 
     String vehiclePrimaryId = _deliveryDetail.vehiclePrimaryId!;
-    String vehicleSecondaryId = _deliveryDetail.vehicleSecondaryId!;
+    String vehicleSecondaryId = _deliveryDetail.vehicleSecondaryId ?? "";
 
     List<DeliveryDetailModel> _historyWeightEmptyList = [];
 
@@ -290,7 +290,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                             ),
                             BigText(
                               text:
-                                  " / ${_deliveryDetail.vehicleSecondaryCode!}",
+                                  " / ${_deliveryDetail.vehicleSecondaryCode ?? ""}",
                               size: Dimensions.fontSize14,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
