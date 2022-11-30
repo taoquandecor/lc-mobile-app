@@ -1,10 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.lcmobileapp">
+    package="mobile.cyberlogs.vn">
     <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="LCMobileApp"
         android:name="${applicationName}"
-        android:icon="@mipmap/icon" android:usesCleartextTraffic="true" android:requestLegacyExternalStorage="true" >
+        android:icon="@mipmap/icon" android:usesCleartextTraffic="true" 
+        android:requestLegacyExternalStorage="true" >
         <activity
             android:name=".MainActivity"
             android:exported="true"

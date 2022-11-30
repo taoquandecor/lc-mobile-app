@@ -1,4 +1,4 @@
-package com.example.lcmobileapp
+package mobile.cyberlogs.vn
 
 import io.flutter.embedding.android.FlutterActivity
 

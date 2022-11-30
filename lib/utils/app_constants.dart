@@ -2,9 +2,9 @@ class AppContants {
   static const String APP_NAME = "LCMobileApp";
   static const int APP_VERSION = 1;
 
-  //static const String BASE_URL = "http://172.18.122.56:8000";
+  static const String BASE_URL = "http://172.18.122.56:8000";
   //static const String BASE_URL = "https://api-uat.cyberlogs.vn";
-  static const String BASE_URL = "http://192.168.1.7:8000";
+  //static const String BASE_URL = "http://192.168.1.7:8000";
 
   // profile and user
   static const String LOGIN_URL = "/mobile/login";

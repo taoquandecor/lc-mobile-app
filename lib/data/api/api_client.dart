@@ -11,7 +11,7 @@ class ApiClient extends GetConnect implements GetxService {
 
   ApiClient({required this.appBaseUrl, required this.sharedPreferences}) {
     baseUrl = appBaseUrl;
-    timeout = Duration(seconds: 30);
+    timeout = const Duration(seconds: 50);
     token = sharedPreferences.getString(AppContants.TOKEN) ?? '';
     terminal = sharedPreferences.getString(AppContants.TERMINAL) ?? '';
     _mainHeaders = {
@@ -24,8 +24,8 @@ class ApiClient extends GetConnect implements GetxService {
   void updateHeader(String token) {
     _mainHeaders = {
       'Content-type': 'application/json; charset=UTF-8',
+      'Connection': 'Keep-Alive',
       'Authorization': 'Bearer $token',
-      'Connection': 'Keep-Alive'
     };
   }
 
