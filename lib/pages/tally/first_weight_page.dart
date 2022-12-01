@@ -10,6 +10,9 @@ import 'package:lcmobileapp/utils/app_message.dart';
 import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/app_icon.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
+import 'package:lcmobileapp/widgets/display_row_data_widget.dart';
+import 'package:lcmobileapp/widgets/display_vehicle_widget.dart';
+import 'package:lcmobileapp/widgets/manifest_widget.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
 import 'package:get/get.dart';
 
@@ -24,7 +27,9 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
   int _currentIndex = 0;
 
   List<DeliveryDetailModel> _registerTicketList = [];
+  List<DeliveryDetailModel> _tempRegisterTicketList = [];
   List<DeliveryDetailModel> _pendingTicketList = [];
+  List<DeliveryDetailModel> _tempPendingTicketList = [];
 
   late TokenTimeOut _tokenTimeOut;
 
@@ -35,6 +40,7 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
     await Get.find<DeliveryDetailController>().getRegistrationTicketList();
     _registerTicketList =
         Get.find<DeliveryDetailController>().registerTicketList;
+    _tempRegisterTicketList = _registerTicketList;
 
     _tokenTimeOut = Get.find<DeliveryDetailController>().tokenTimeOut;
 
@@ -47,6 +53,7 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
     await Get.find<DeliveryDetailController>().getPendingTicketList();
 
     _pendingTicketList = Get.find<DeliveryDetailController>().pendingTicketList;
+    _tempPendingTicketList = _pendingTicketList;
   }
 
   @override
@@ -76,14 +83,10 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
     if (_currentIndex == 0) {
       // tab kế hoạch
       if (text.isEmpty) {
-        results = _registerTicketList;
+        results = _tempRegisterTicketList;
       } else {
         results = _registerTicketList
-            .where((search) =>
-                search.vehiclePrimaryCode!.contains(text) ||
-                search.vehicleSecondaryCode!.contains(text) ||
-                search.bargeCode!.contains(text) ||
-                search.consigneeCode!.contains(text))
+            .where((search) => search.vehiclePrimaryCode!.contains(text))
             .toList();
       }
       setState(() {
@@ -92,14 +95,10 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
     } else if (_currentIndex == 1) {
       // tab cân chốt
       if (text.isEmpty) {
-        results = _pendingTicketList;
+        results = _tempPendingTicketList;
       } else {
         results = _pendingTicketList
-            .where((search) =>
-                search.vehiclePrimaryCode!.contains(text) ||
-                search.vehicleSecondaryCode!.contains(text) ||
-                search.bargeCode!.contains(text) ||
-                search.consigneeCode!.contains(text))
+            .where((search) => search.vehiclePrimaryCode!.contains(text))
             .toList();
       }
       setState(() {
@@ -223,11 +222,12 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                 ),
                                 Container(
                                   height: Dimensions.pageListView,
-                                  padding: EdgeInsets.only(
-                                      top: Dimensions.height10,
-                                      left: Dimensions.width10 / 2,
-                                      right: Dimensions.width10 / 2,
-                                      bottom: Dimensions.height10),
+                                  margin: EdgeInsets.only(
+                                    top: Dimensions.height10,
+                                    left: Dimensions.width10 / 2,
+                                    right: Dimensions.width10 / 2,
+                                    bottom: Dimensions.height10,
+                                  ),
                                   child: ListView.builder(
                                     itemCount: _registerTicketList.length,
                                     itemBuilder: (context, index) {
@@ -247,58 +247,59 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Row(
-                                                      children: [
-                                                        BigText(
-                                                          text:
-                                                              _registerTicketList[
-                                                                      index]
-                                                                  .vesselCode!,
-                                                          size: Dimensions
-                                                              .fontSize14,
-                                                          color: AppColor
-                                                              .mainColor,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                        BigText(
-                                                          text:
-                                                              "- ${_registerTicketList[index].bargeCode ?? ""}",
-                                                          size: Dimensions
-                                                              .fontSize12,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height:
-                                                          Dimensions.height10,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        BigText(
-                                                          text: _registerTicketList[
+                                                    // Tầu sàlan
+                                                    DisplayRowDataWidget(
+                                                      firstField:
+                                                          _registerTicketList[
                                                                   index]
-                                                              .consigneeCode!,
-                                                          size: Dimensions
-                                                              .fontSize12,
-                                                          color: Colors.green,
-                                                        ),
-                                                        BigText(
-                                                          text:
-                                                              "/ ${_registerTicketList[index].delegateCode}",
-                                                          size: Dimensions
-                                                              .fontSize12,
-                                                        ),
-                                                      ],
+                                                              .vesselCode
+                                                              .toString(),
+                                                      secondField:
+                                                          _registerTicketList[
+                                                                      index]
+                                                                  .bargeCode ??
+                                                              "",
+                                                      firstColor:
+                                                          AppColor.mainColor,
+                                                      firstSize:
+                                                          Dimensions.fontSize14,
+                                                      secondSize:
+                                                          Dimensions.fontSize12,
+                                                      fontWeight2:
+                                                          FontWeight.normal,
                                                     ),
                                                     SizedBox(
                                                       height:
                                                           Dimensions.height10,
                                                     ),
+                                                    // Ben nhan va Uy thac
+                                                    DisplayRowDataWidget(
+                                                      firstField:
+                                                          _registerTicketList[
+                                                                  index]
+                                                              .consigneeCode
+                                                              .toString(),
+                                                      firstColor: Colors.green,
+                                                      firstSize:
+                                                          Dimensions.fontSize12,
+                                                      secondSize:
+                                                          Dimensions.fontSize12,
+                                                      secondField:
+                                                          _registerTicketList[
+                                                                      index]
+                                                                  .delegateCode ??
+                                                              "",
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          Dimensions.height10,
+                                                    ),
+
                                                     BigText(
                                                       text: _registerTicketList[
-                                                              index]
-                                                          .cargoName!,
+                                                                  index]
+                                                              .operationTerminalCode ??
+                                                          "",
                                                       size:
                                                           Dimensions.fontSize12,
                                                       color: Colors.black,
@@ -309,33 +310,30 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.end,
                                                   children: [
-                                                    Row(
-                                                      children: [
-                                                        BigText(
-                                                          text: _registerTicketList[
+                                                    // Biển số xe , Biển số Mooc
+                                                    DisplayVehicleWidget(
+                                                      primaryCode:
+                                                          _registerTicketList[
                                                                   index]
-                                                              .vehiclePrimaryCode!,
-                                                          size: Dimensions
-                                                              .fontSize12,
-                                                          color: AppColor
-                                                              .mainColor,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                        BigText(
-                                                          text:
-                                                              " / ${_registerTicketList[index].vehicleSecondaryCode}",
-                                                          size: Dimensions
-                                                              .fontSize12,
-                                                          color: Colors.black,
-                                                        ),
-                                                        SmallText(
-                                                          text:
-                                                              " (${_registerTicketList[index].numOfTurn}/${_registerTicketList[index].actualTurn})",
-                                                          size: Dimensions
-                                                              .fontSize12,
-                                                        ),
-                                                      ],
+                                                              .vehiclePrimaryCode
+                                                              .toString(),
+                                                      secondaryCode:
+                                                          _registerTicketList[
+                                                                      index]
+                                                                  .vehicleSecondaryCode ??
+                                                              "",
+                                                      numOfTurn:
+                                                          _registerTicketList[
+                                                                  index]
+                                                              .numOfTurn
+                                                              .toString(),
+                                                      actualOfTurn:
+                                                          _registerTicketList[
+                                                                  index]
+                                                              .actualTurn
+                                                              .toString(),
+                                                      size:
+                                                          Dimensions.fontSize12,
                                                     ),
                                                     SizedBox(
                                                       height:
@@ -343,8 +341,9 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                                     ),
                                                     BigText(
                                                       text: _registerTicketList[
-                                                              index]
-                                                          .serviceTypeName!,
+                                                                  index]
+                                                              .serviceTypeName ??
+                                                          "",
                                                       size:
                                                           Dimensions.fontSize12,
                                                       color: Colors.black,
@@ -353,14 +352,29 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                                       height:
                                                           Dimensions.height10,
                                                     ),
-                                                    BigText(
-                                                      text: _registerTicketList[
-                                                              index]
-                                                          .operationTerminalName!,
-                                                      size:
-                                                          Dimensions.fontSize12,
-                                                      color: Colors.black,
-                                                    ),
+                                                    // chủ hàng ủy thác loại hàng billoflading
+                                                    ManifestWidget(
+                                                      billOfLading:
+                                                          _registerTicketList[
+                                                                      index]
+                                                                  .billOfLading ??
+                                                              "",
+                                                      consigneeCode:
+                                                          _registerTicketList[
+                                                                      index]
+                                                                  .manifestConsigneeCode ??
+                                                              "",
+                                                      cargoCode:
+                                                          _registerTicketList[
+                                                                      index]
+                                                                  .cargoCode ??
+                                                              "",
+                                                      delegrateCode:
+                                                          _registerTicketList[
+                                                                      index]
+                                                                  .delegateCode ??
+                                                              "",
+                                                    )
                                                   ],
                                                 ),
                                               ],
@@ -369,6 +383,8 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                               height: Dimensions.height10 / 2,
                                             ),
                                             Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
                                               children: [
                                                 Container(
                                                   width: Dimensions
@@ -401,6 +417,7 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                   builder: (deliveryDetailController) {
                 return deliveryDetailController.isLoaded
                     ? SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
                         child: Container(
                           color: AppColor.backgroundWhiteColor,
                           margin: EdgeInsets.only(
@@ -452,6 +469,8 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                     right: Dimensions.width10 / 2,
                                     bottom: Dimensions.height10),
                                 child: ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
                                   itemCount: _pendingTicketList.length,
                                   itemBuilder: (context, index) {
                                     return GestureDetector(
@@ -469,87 +488,85 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      BigText(
-                                                        text:
-                                                            _pendingTicketList[
+                                                  // Tầu sàlan
+                                                  DisplayRowDataWidget(
+                                                    firstField:
+                                                        _registerTicketList[
+                                                                index]
+                                                            .vesselCode
+                                                            .toString(),
+                                                    secondField:
+                                                        _registerTicketList[
                                                                     index]
-                                                                .vesselCode!,
-                                                        size: Dimensions
-                                                            .fontSize14,
-                                                        color:
-                                                            AppColor.mainColor,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                      BigText(
-                                                        text:
-                                                            "- ${_pendingTicketList[index].bargeCode}",
-                                                        size: Dimensions
-                                                            .fontSize12,
-                                                      ),
-                                                    ],
+                                                                .bargeCode ??
+                                                            "",
+                                                    firstColor:
+                                                        AppColor.mainColor,
+                                                    firstSize:
+                                                        Dimensions.fontSize14,
+                                                    secondSize:
+                                                        Dimensions.fontSize12,
+                                                    fontWeight2:
+                                                        FontWeight.normal,
                                                   ),
                                                   SizedBox(
                                                     height: Dimensions.height10,
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      BigText(
-                                                        text:
-                                                            _pendingTicketList[
+                                                  // Ben nhan va Uy thac
+                                                  DisplayRowDataWidget(
+                                                    firstField:
+                                                        _registerTicketList[
+                                                                index]
+                                                            .consigneeCode
+                                                            .toString(),
+                                                    firstColor: Colors.green,
+                                                    firstSize:
+                                                        Dimensions.fontSize12,
+                                                    secondSize:
+                                                        Dimensions.fontSize12,
+                                                    secondField:
+                                                        _registerTicketList[
                                                                     index]
-                                                                .consigneeCode!,
-                                                        size: Dimensions
-                                                            .fontSize12,
-                                                        color: Colors.green,
-                                                      ),
-                                                      BigText(
-                                                        text:
-                                                            "/ ${_pendingTicketList[index].delegateCode}",
-                                                        size: Dimensions
-                                                            .fontSize12,
-                                                      ),
-                                                    ],
+                                                                .delegateCode ??
+                                                            "",
                                                   ),
                                                   SizedBox(
                                                     height: Dimensions.height10,
                                                   ),
                                                   BigText(
-                                                    text: _pendingTicketList[
-                                                            index]
-                                                        .cargoName!,
+                                                    text: _registerTicketList[
+                                                                index]
+                                                            .operationTerminalCode ??
+                                                        "",
                                                     size: Dimensions.fontSize12,
                                                     color: Colors.black,
                                                   ),
                                                 ],
                                               ),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      BigText(
-                                                        text: _pendingTicketList[
+                                                  DisplayVehicleWidget(
+                                                    primaryCode:
+                                                        _registerTicketList[
                                                                 index]
-                                                            .vehiclePrimaryCode!,
-                                                        size: Dimensions
-                                                            .fontSize12,
-                                                        color:
-                                                            AppColor.mainColor,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                      BigText(
-                                                        text:
-                                                            " / ${_pendingTicketList[index].vehicleSecondaryCode}",
-                                                        size: Dimensions
-                                                            .fontSize12,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ],
+                                                            .vehiclePrimaryCode
+                                                            .toString(),
+                                                    secondaryCode:
+                                                        _registerTicketList[
+                                                                    index]
+                                                                .vehicleSecondaryCode ??
+                                                            "",
+                                                    numOfTurn:
+                                                        _registerTicketList[
+                                                                index]
+                                                            .numOfTurn
+                                                            .toString(),
+                                                    actualOfTurn:
+                                                        _registerTicketList[
+                                                                index]
+                                                            .actualTurn
+                                                            .toString(),
+                                                    size: Dimensions.fontSize12,
                                                   ),
                                                   SizedBox(
                                                     height: Dimensions.height10,
@@ -564,13 +581,29 @@ class _FirstWeightPageState extends State<FirstWeightPage> {
                                                   SizedBox(
                                                     height: Dimensions.height10,
                                                   ),
-                                                  BigText(
-                                                    text: _pendingTicketList[
-                                                            index]
-                                                        .operationTerminalName!,
-                                                    size: Dimensions.fontSize12,
-                                                    color: Colors.black,
-                                                  ),
+                                                  // chủ hàng ủy thác loại hàng billoflading
+                                                  ManifestWidget(
+                                                    billOfLading:
+                                                        _registerTicketList[
+                                                                    index]
+                                                                .billOfLading ??
+                                                            "",
+                                                    consigneeCode:
+                                                        _registerTicketList[
+                                                                    index]
+                                                                .manifestConsigneeCode ??
+                                                            "",
+                                                    cargoCode:
+                                                        _registerTicketList[
+                                                                    index]
+                                                                .cargoCode ??
+                                                            "",
+                                                    delegrateCode:
+                                                        _registerTicketList[
+                                                                    index]
+                                                                .delegateCode ??
+                                                            "",
+                                                  )
                                                 ],
                                               ),
                                             ],

@@ -32,8 +32,8 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    var userNameController = TextEditingController();
-    var passwordController = TextEditingController();
+    final userNameController = TextEditingController();
+    final passwordController = TextEditingController();
 
     void login(AuthController authController) {
       String userName = userNameController.text;
@@ -42,13 +42,10 @@ class _LoginPageState extends State<LoginPage> {
       // String userName = 'quan.tran';
       // String passWord = '123456a@';
 
-      // String userName = 'hungdh';
-      // String passWord = '123456';
-
       if (userName.isEmpty) {
-        showCustomSnackBar("UserName is not empty", title: "UserName");
+        showCustomSnackBar(AppMessage.ERROR_MESSAGE6, title: "UserName");
       } else if (passWord.isEmpty) {
-        showCustomSnackBar("Password is not empty", title: "Password");
+        showCustomSnackBar(AppMessage.ERROR_MESSAGE7, title: "Password");
       } else {
         authController.login(userName, passWord).then((status) {
           if (status.isSuccess) {
@@ -74,7 +71,11 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  showCustomSnackBar(
+                                      "Hệ thống mặc định là tiếng việt",
+                                      title: "Login");
+                                },
                                 child: const Image(
                                   fit: BoxFit.cover,
                                   image: AssetImage("assets/images/en.png"),
@@ -89,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Container(
                               color: Colors.white,
-                              width: Dimensions.width20 * 12,
                               height: Dimensions.height45 * 1.5,
                               child: const Image(
                                 fit: BoxFit.cover,
@@ -102,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                           height: Dimensions.height20,
                         ),
                         BigText(
-                          text: "Đăng nhập",
+                          text: AppMessage.LOGIN_TEXT,
                           size: Dimensions.fontSize25,
                           color: AppColor.mainColor,
                           fontWeight: FontWeight.bold,
@@ -116,7 +116,9 @@ class _LoginPageState extends State<LoginPage> {
                               right: Dimensions.width10),
                           child: Column(children: [
                             TextFormField(
-                              controller: userNameController,
+                              onChanged: ((value) {
+                                userNameController.text = value;
+                              }),
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.person),
                                 contentPadding: EdgeInsets.symmetric(
@@ -133,7 +135,9 @@ class _LoginPageState extends State<LoginPage> {
                               height: Dimensions.height10,
                             ),
                             TextFormField(
-                              controller: passwordController,
+                              onChanged: (value) {
+                                passwordController.text = value;
+                              },
                               obscureText: !_passwordVisible,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.key),
@@ -143,11 +147,13 @@ class _LoginPageState extends State<LoginPage> {
                                       _passwordVisible = !_passwordVisible;
                                     });
                                   },
-                                  child: Icon(
-                                    _passwordVisible
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                  ),
+                                  child: _passwordVisible
+                                      ? const Icon(Icons.visibility,
+                                          color: Colors.blue)
+                                      : const Icon(
+                                          Icons.visibility_off,
+                                          color: Colors.red,
+                                        ),
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: Dimensions.width10,
@@ -189,7 +195,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 color: AppColor.mainColor))),
                                   ),
                                   child: BigText(
-                                    text: "Đăng nhập",
+                                    text: AppMessage.LOGIN_TEXT,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -205,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                             Get.toNamed(RouteHelper.getForgotPasswordPage());
                           },
                           child: BigText(
-                            text: "Bạn quên mật khẩu?",
+                            text: AppMessage.FORGET_PASS_TEXT,
                             size: Dimensions.fontSize16,
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,

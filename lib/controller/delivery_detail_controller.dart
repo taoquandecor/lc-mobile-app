@@ -220,7 +220,7 @@ class DeliveryDetailController extends GetxController implements GetxService {
           responseModel = ResponseModel(false, AppMessage.TOKEN_TIMEOUT);
         } else {
           _tokenTimeOut = TokenTimeOut(isTimeOut: false);
-          responseModel = ResponseModel(true, response.body["Message"]);
+          responseModel = ResponseModel(false, response.body["Message"]);
         }
       } else {
         responseModel = ResponseModel(false, response.statusText.toString());

@@ -15,6 +15,8 @@ import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/app_icon.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/cargo_direct_widget.dart';
+import 'package:lcmobileapp/widgets/display_row_data_widget.dart';
+import 'package:lcmobileapp/widgets/display_vehicle_widget.dart';
 import 'package:lcmobileapp/widgets/edit_box_widget.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
 import 'package:get/get.dart';
@@ -242,26 +244,16 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                           text: AppMessage.VESSEL_BARGE,
                           size: Dimensions.fontSize16,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BigText(
-                              text: _deliveryDetail.vesselCode!,
-                              size: Dimensions.fontSize14,
-                              color: AppColor.mainColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            BigText(
-                              text: "- ${_deliveryDetail.bargeCode}",
-                              size: Dimensions.fontSize14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ],
+                        DisplayRowDataWidget(
+                          firstField: _deliveryDetail.vesselCode.toString(),
+                          secondField: _deliveryDetail.bargeCode ?? "",
+                          firstSize: Dimensions.fontSize14,
+                          secondSize: Dimensions.fontSize14,
+                          firstColor: AppColor.mainColor,
+                          secondColor: Colors.black,
                         )
                       ],
                     ),
-
                     Container(
                       width: Dimensions.screenWidth,
                       height: 1.2,
@@ -279,28 +271,14 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                           text: AppMessage.VEHICLE_MOOC_TURN,
                           size: Dimensions.fontSize16,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BigText(
-                              text: _deliveryDetail.vehiclePrimaryCode!,
-                              size: Dimensions.fontSize14,
-                              color: AppColor.mainColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            BigText(
-                              text:
-                                  " / ${_deliveryDetail.vehicleSecondaryCode ?? ""}",
-                              size: Dimensions.fontSize14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            SmallText(
-                              text:
-                                  " (${_deliveryDetail.numOfTurn}/${_deliveryDetail.actualTurn})",
-                              size: Dimensions.fontSize14,
-                            )
-                          ],
+                        DisplayVehicleWidget(
+                          primaryCode:
+                              _deliveryDetail.vehiclePrimaryCode.toString(),
+                          secondaryCode:
+                              _deliveryDetail.vehicleSecondaryCode ?? "",
+                          numOfTurn: _deliveryDetail.numOfTurn.toString(),
+                          actualOfTurn: _deliveryDetail.actualTurn.toString(),
+                          size: Dimensions.fontSize14,
                         )
                       ],
                     ),
@@ -322,16 +300,18 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                           text: AppMessage.CONSIGNEE_DELEGATE,
                           size: Dimensions.fontSize16,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BigText(
-                              text:
-                                  "${_deliveryDetail.manifestConsigneeCode} / ${_deliveryDetail.manifestDelegateCode}",
-                              size: Dimensions.fontSize14,
-                              color: Colors.black,
-                            ),
-                          ],
+                        DisplayRowDataWidget(
+                          firstField:
+                              _deliveryDetail.manifestConsigneeCode.toString(),
+                          secondField:
+                              _deliveryDetail.manifestDelegateCode ?? "",
+                          firstColor: Colors.black,
+                          secondColor: Colors.black,
+                          firstSize: Dimensions.fontSize14,
+                          secondSize: Dimensions.fontSize14,
+                          char: "/",
+                          fontWeight1: FontWeight.normal,
+                          fontWeight2: FontWeight.normal,
                         )
                       ],
                     ),
@@ -353,15 +333,16 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                           text: AppMessage.RECEIVE_DELEGATE,
                           size: Dimensions.fontSize16,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BigText(
-                              text: _deliveryDetail.consigneeCode!,
-                              size: Dimensions.fontSize14,
-                              color: Colors.black,
-                            ),
-                          ],
+                        DisplayRowDataWidget(
+                          firstField: _deliveryDetail.consigneeCode.toString(),
+                          secondField: _deliveryDetail.delegateCode ?? "",
+                          firstColor: Colors.black,
+                          secondColor: Colors.black,
+                          firstSize: Dimensions.fontSize14,
+                          secondSize: Dimensions.fontSize14,
+                          char: "/",
+                          fontWeight1: FontWeight.normal,
+                          fontWeight2: FontWeight.normal,
                         )
                       ],
                     ),
@@ -467,7 +448,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                     ),
                     // Hướng hàng
                     CargoDirectWiget(
-                        cargoDirectId: _deliveryDetail.cargoDirection!),
+                        cargoDirectId: _deliveryDetail.cargoDirection ?? ""),
                     Container(
                       width: Dimensions.screenWidth,
                       height: 1.2,

@@ -1,4 +1,8 @@
 class AppMessage {
+  // Đăng nhập
+  static const String LOGIN_TEXT = "Đăng nhập";
+  static const String FORGET_PASS_TEXT = "Bạn quên mật khẩu?";
+
   // Tally bốt cân
   static const String WEIGHT_PLAN_TAB = "Kế hoạch";
   static const String WEIGHT_NET_TAB = "Cân chốt";
@@ -9,8 +13,7 @@ class AppMessage {
       "Can not got registration ticket";
   static const String PENDING_TICKET_ERROR = "Can not got pending ticket";
 
-  static const String HINT_TEXT_TALLY_WEIGHT_BOT =
-      "Biển số xe, sà lan, chủ hàng";
+  static const String HINT_TEXT_TALLY_WEIGHT_BOT = "Biển số xe";
 
   // Chi tiết tally bốt cân
   static const String DETAIL_TAB = "Chi tiết";
@@ -104,6 +107,7 @@ class AppMessage {
   static const String ERROR_MESSAGE4 = "Password is not match";
   static const String ERROR_MESSAGE5 = "Token is expired. Please login again!";
   static const String ERROR_MESSAGE6 = "UserName is not empty";
+  static const String ERROR_MESSAGE7 = "Password is not empty";
 
   // success message
   static const String SUCCESS_MESSAGE1 = "Lưu thành công";
