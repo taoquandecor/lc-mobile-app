@@ -6,7 +6,6 @@ import 'package:lcmobileapp/controller/user_controller.dart';
 import 'package:lcmobileapp/models/delivery_detail_model.dart';
 import 'package:lcmobileapp/models/token_timeout_model.dart';
 import 'package:lcmobileapp/pages/home/home_page.dart';
-import 'package:lcmobileapp/pages/tally/first_weight_page.dart';
 import 'package:lcmobileapp/route/route_helper.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
 import 'package:lcmobileapp/utils/app_constants.dart';
@@ -21,6 +20,7 @@ import 'package:lcmobileapp/widgets/edit_box_widget.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:dotted_line/dotted_line.dart';
 
 class FirstWeightDetailPage extends StatefulWidget {
   int pageId;
@@ -30,8 +30,27 @@ class FirstWeightDetailPage extends StatefulWidget {
   State<FirstWeightDetailPage> createState() => _FirstWeightDetailPageState();
 }
 
-class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
+class _FirstWeightDetailPageState extends State<FirstWeightDetailPage>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
   var _currentTabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _currentTabIndex = _tabController.index;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +116,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
             bargeVoyageId: _deliveryDetail.bargeVoyageId,
             destinationId: _deliveryDetail.destinationId,
             sourceId: _deliveryDetail.sourceId,
+            workFlowCode: AppContants.GROSS_WF,
           );
         } else if (cargoDirection == AppContants.UNLOADING ||
             cargoDirection == AppContants.STORAGE_EXPORT) {
@@ -132,6 +152,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
             bargeVoyageId: _deliveryDetail.bargeVoyageId,
             destinationId: _deliveryDetail.destinationId,
             sourceId: _deliveryDetail.sourceId,
+            workFlowCode: AppContants.TARE_WF,
           );
         }
 
@@ -177,12 +198,13 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
           ),
           elevation: 0,
           bottom: TabBar(
+            controller: _tabController,
             onTap: (index) {
               setState(() {
                 _currentTabIndex = index;
               });
             },
-            unselectedLabelColor: AppColor.backgroundColor,
+            indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.tab,
             tabs: [
               Tab(
@@ -191,13 +213,15 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                     iconColor: _currentTabIndex == 0
                         ? AppColor.mainColor
                         : Colors.grey,
-                    iconSize: Dimensions.fontSize25,
+                    iconSize: Dimensions.fontSize20,
                     backgroundColor: AppColor.backgroundWhiteColor),
+                iconMargin: EdgeInsets.only(
+                    top: Dimensions.height10 + Dimensions.height5),
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
                     text: AppMessage.DETAIL_TAB,
-                    size: Dimensions.fontSize16,
+                    size: Dimensions.fontSize12,
                     color: _currentTabIndex == 0
                         ? AppColor.mainColor
                         : Colors.grey,
@@ -210,13 +234,15 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                     iconColor: _currentTabIndex == 1
                         ? AppColor.mainColor
                         : Colors.grey,
-                    iconSize: Dimensions.fontSize25,
+                    iconSize: Dimensions.fontSize20,
                     backgroundColor: AppColor.backgroundWhiteColor),
+                iconMargin: EdgeInsets.only(
+                    top: Dimensions.height10 + Dimensions.height5),
                 child: Align(
                     alignment: Alignment.center,
                     child: BigText(
                       text: AppMessage.HISTORY_TAB,
-                      size: Dimensions.fontSize16,
+                      size: Dimensions.fontSize12,
                       color: _currentTabIndex == 1
                           ? AppColor.mainColor
                           : Colors.grey,
@@ -226,11 +252,12 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
           ),
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
             SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.only(
-                    top: Dimensions.height20,
+                margin: EdgeInsets.only(
+                    top: Dimensions.height10,
                     left: Dimensions.width10,
                     right: Dimensions.width10),
                 child: Column(
@@ -242,23 +269,20 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.VESSEL_BARGE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         DisplayRowDataWidget(
                           firstField: _deliveryDetail.vesselCode.toString(),
                           secondField: _deliveryDetail.bargeCode ?? "",
-                          firstSize: Dimensions.fontSize14,
-                          secondSize: Dimensions.fontSize14,
+                          firstSize: Dimensions.fontSize12,
+                          secondSize: Dimensions.fontSize12,
                           firstColor: AppColor.mainColor,
                           secondColor: Colors.black,
                         )
                       ],
                     ),
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -269,7 +293,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.VEHICLE_MOOC_TURN,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         DisplayVehicleWidget(
                           primaryCode:
@@ -278,16 +302,13 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                               _deliveryDetail.vehicleSecondaryCode ?? "",
                           numOfTurn: _deliveryDetail.numOfTurn.toString(),
                           actualOfTurn: _deliveryDetail.actualTurn.toString(),
-                          size: Dimensions.fontSize14,
+                          size: Dimensions.fontSize12,
                         )
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -298,7 +319,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.CONSIGNEE_DELEGATE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         DisplayRowDataWidget(
                           firstField:
@@ -307,8 +328,8 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                               _deliveryDetail.manifestDelegateCode ?? "",
                           firstColor: Colors.black,
                           secondColor: Colors.black,
-                          firstSize: Dimensions.fontSize14,
-                          secondSize: Dimensions.fontSize14,
+                          firstSize: Dimensions.fontSize10,
+                          secondSize: Dimensions.fontSize10,
                           char: "/",
                           fontWeight1: FontWeight.normal,
                           fontWeight2: FontWeight.normal,
@@ -316,11 +337,8 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -331,15 +349,15 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.RECEIVE_DELEGATE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         DisplayRowDataWidget(
                           firstField: _deliveryDetail.consigneeCode.toString(),
                           secondField: _deliveryDetail.delegateCode ?? "",
                           firstColor: Colors.black,
                           secondColor: Colors.black,
-                          firstSize: Dimensions.fontSize14,
-                          secondSize: Dimensions.fontSize14,
+                          firstSize: Dimensions.fontSize10,
+                          secondSize: Dimensions.fontSize10,
                           char: "/",
                           fontWeight1: FontWeight.normal,
                           fontWeight2: FontWeight.normal,
@@ -347,11 +365,8 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -362,14 +377,14 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.CARGO_CODE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
-                              text: _deliveryDetail.cargoName!,
-                              size: Dimensions.fontSize14,
+                              text: _deliveryDetail.cargoName ?? "",
+                              size: Dimensions.fontSize10,
                               color: Colors.black,
                             ),
                           ],
@@ -377,11 +392,8 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -392,14 +404,14 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.BILLOFLANGDING,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
-                              text: _deliveryDetail.billOfLading!,
-                              size: Dimensions.fontSize14,
+                              text: _deliveryDetail.billOfLading ?? "",
+                              size: Dimensions.fontSize10,
                               color: Colors.black,
                             ),
                           ],
@@ -407,11 +419,8 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -422,14 +431,14 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.SERVICE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
-                              text: _deliveryDetail.serviceTypeName!,
-                              size: Dimensions.fontSize14,
+                              text: _deliveryDetail.serviceTypeName ?? "",
+                              size: Dimensions.fontSize10,
                               color: Colors.black,
                             ),
                           ],
@@ -437,11 +446,8 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -449,11 +455,8 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                     // Hướng hàng
                     CargoDirectWiget(
                         cargoDirectId: _deliveryDetail.cargoDirection ?? ""),
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -464,14 +467,14 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.OPERATION_TERMINAL,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
-                              text: _deliveryDetail.operationTerminalName!,
-                              size: Dimensions.fontSize14,
+                              text: _deliveryDetail.operationTerminalName ?? "",
+                              size: Dimensions.fontSize10,
                               color: Colors.black,
                             ),
                           ],
@@ -479,11 +482,8 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -494,15 +494,15 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.REMAIN_CARGO,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
                               text:
-                                  "${f.format(int.parse(_deliveryDetail.remainQuantity!))} (Kg)",
-                              size: Dimensions.fontSize16,
+                                  "${f.format(int.parse(_deliveryDetail.remainQuantity ?? "0"))} (Kg)",
+                              size: Dimensions.fontSize12,
                               color: Colors.green,
                               fontWeight: FontWeight.bold,
                             ),
@@ -510,11 +510,8 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                         )
                       ],
                     ),
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -599,19 +596,19 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                             margin: EdgeInsets.all(Dimensions.width10),
                             child: BigText(
                               text: AppMessage.TARE_WEIGHT,
-                              size: Dimensions.fontSize16,
+                              size: Dimensions.fontSize12,
                             )),
                         Container(
                             margin: EdgeInsets.all(Dimensions.width10),
                             child: BigText(
                               text: AppMessage.GROSS_WEIGHT,
-                              size: Dimensions.fontSize16,
+                              size: Dimensions.fontSize12,
                             )),
                         Container(
                             margin: EdgeInsets.all(Dimensions.width10),
                             child: BigText(
                               text: AppMessage.WEIGHT_TIME,
-                              size: Dimensions.fontSize16,
+                              size: Dimensions.fontSize12,
                             )),
                       ],
                     ),
@@ -636,7 +633,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                         }
                         return SmallText(
                           text: outputDate,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         );
                       }
 
@@ -662,7 +659,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                                                   deliveryDetailController
                                                       .historyWeightList[index]
                                                       .tareWeight!)),
-                                              size: Dimensions.fontSize16,
+                                              size: Dimensions.fontSize12,
                                             ),
                                           ),
                                           // cân cả hàng
@@ -674,7 +671,7 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                                                   deliveryDetailController
                                                       .historyWeightList[index]
                                                       .grossWeight!)),
-                                              size: Dimensions.fontSize16,
+                                              size: Dimensions.fontSize12,
                                             ),
                                           ),
                                           // thời gian cân
@@ -685,20 +682,9 @@ class _FirstWeightDetailPageState extends State<FirstWeightDetailPage> {
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            width: Dimensions.screenWidth -
-                                                Dimensions.width20 * 2,
-                                            height: 1.2,
-                                            margin: EdgeInsets.only(
-                                                top: 0,
-                                                left: Dimensions.width10,
-                                                right: Dimensions.width10),
-                                            color: AppColor.lineColor,
-                                          ),
-                                        ],
-                                      )
+                                      DottedLine(
+                                        dashColor: AppColor.dotColor,
+                                      ),
                                     ],
                                   )
                                 : const CustomLoader();

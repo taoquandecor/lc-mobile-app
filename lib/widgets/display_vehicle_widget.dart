@@ -57,7 +57,7 @@ class DisplayVehicleWidget extends StatelessWidget {
         ),
         SmallText(
           text: " ($actualOfTurn/$numOfTurn)",
-          size: Dimensions.fontSize14,
+          size: Dimensions.fontSize10,
         )
       ],
     );

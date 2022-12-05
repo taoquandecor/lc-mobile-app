@@ -3,8 +3,10 @@ import 'package:lcmobileapp/pages/account/profile_page.dart';
 import 'package:lcmobileapp/pages/home/comming_page.dart';
 import 'package:lcmobileapp/pages/tally/first_weight_page.dart';
 import 'package:lcmobileapp/pages/tally/tally_berth_page.dart';
+import 'package:lcmobileapp/utils/app_arguments.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
 import 'package:get/get.dart';
+import 'package:lcmobileapp/utils/app_constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -59,11 +61,11 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.list),
-            label: "Profile",
+            label: "FirstWeight",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.phone_iphone),
-            label: "Tally",
+            label: "TallyBerth",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

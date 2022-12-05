@@ -14,9 +14,11 @@ import 'package:lcmobileapp/utils/dimensions.dart';
 import 'package:lcmobileapp/widgets/app_icon.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/cargo_direct_widget.dart';
+import 'package:lcmobileapp/widgets/display_row_data_widget.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:dotted_line/dotted_line.dart';
 
 class TallyBerthDetailPage extends StatefulWidget {
   final int pageId;
@@ -26,7 +28,9 @@ class TallyBerthDetailPage extends StatefulWidget {
   State<TallyBerthDetailPage> createState() => _TallyBerthDetailPageState();
 }
 
-class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
+class _TallyBerthDetailPageState extends State<TallyBerthDetailPage>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
   var _currentTabIndex = 0;
   String _vesselVoyageId = "";
   late DeliveryDetailModel _deliveryDetail;
@@ -51,11 +55,18 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
     _deliveryDetail =
         Get.find<DeliveryDetailController>().pendingTicketList[widget.pageId];
     _vesselVoyageId = _deliveryDetail.vesselVoyageId.toString();
+    _tabController = TabController(vsync: this, length: 2);
+    _tabController.addListener(() {
+      setState(() {
+        _currentTabIndex = _tabController.index;
+      });
+    });
     LoadBargeVoyages();
   }
 
   @override
   void dispose() {
+    _tabController.dispose();
     super.dispose();
     _bargeVoyageList = [];
   }
@@ -98,7 +109,7 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
             if (_tokenTimeout.isTimeOut) {
               Get.find<UserController>().clearSharedData();
               Get.offNamed(RouteHelper.getLoginPage());
-              Get.snackbar("Token", "Token is expired. Please login again!");
+              Get.snackbar("Token", AppMessage.ERROR_MESSAGE5);
             } else {
               showCustomSnackBar(status.message);
             }
@@ -122,17 +133,18 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
           title: BigText(
             text: AppMessage.TALLY_WEIGHT_BERTH,
             color: AppColor.mainColor,
-            size: Dimensions.fontSize25,
+            size: Dimensions.fontSize20,
           ),
           backgroundColor: AppColor.backgroundWhiteColor,
           elevation: 0,
           bottom: TabBar(
+            controller: _tabController,
             onTap: (index) {
               setState(() {
                 _currentTabIndex = index;
               });
             },
-            unselectedLabelColor: AppColor.backgroundColor,
+            indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.tab,
             tabs: [
               Tab(
@@ -140,14 +152,16 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                   icon: Icons.info_outline,
                   iconColor:
                       _currentTabIndex == 0 ? AppColor.mainColor : Colors.grey,
-                  iconSize: Dimensions.fontSize25,
+                  iconSize: Dimensions.fontSize20,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
+                iconMargin: EdgeInsets.only(
+                    top: Dimensions.height10 + Dimensions.height5),
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
                     text: AppMessage.DETAIL_TAB,
-                    size: Dimensions.fontSize16,
+                    size: Dimensions.fontSize12,
                     color: _currentTabIndex == 0
                         ? AppColor.mainColor
                         : Colors.grey,
@@ -157,16 +171,18 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
               Tab(
                 icon: AppIcon(
                   icon: Icons.phone_android,
-                  iconSize: Dimensions.fontSize25,
+                  iconSize: Dimensions.fontSize20,
                   iconColor:
                       _currentTabIndex == 1 ? AppColor.mainColor : Colors.grey,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
+                iconMargin: EdgeInsets.only(
+                    top: Dimensions.height10 + Dimensions.height5),
                 child: Align(
                     alignment: Alignment.center,
                     child: BigText(
-                      text: AppMessage.TALLY_WEIGHT_BERTH,
-                      size: Dimensions.fontSize16,
+                      text: AppMessage.TALLY_BERTH,
+                      size: Dimensions.fontSize12,
                       color: _currentTabIndex == 1
                           ? AppColor.mainColor
                           : Colors.grey,
@@ -176,81 +192,39 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
           ),
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
             // Thông tin chi tiết phiếu cân
             SingleChildScrollView(
               child: Container(
                 color: Colors.white,
-                padding: EdgeInsets.only(
-                    top: Dimensions.height20,
+                margin: EdgeInsets.only(
+                    top: Dimensions.height10,
                     left: Dimensions.width10,
                     right: Dimensions.width10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SmallText(
-                          text: AppMessage.DELIVERY_DETAIL_CODE,
-                          size: Dimensions.fontSize16,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BigText(
-                              text: _deliveryDetail.code ?? "",
-                              size: Dimensions.fontSize14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
-                    ),
-                    SizedBox(
-                      height: Dimensions.height10,
-                    ),
                     // Tầu-sà lan
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SmallText(
                           text: AppMessage.VESSEL_BARGE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BigText(
-                              text: _deliveryDetail.vesselCode ?? "",
-                              size: Dimensions.fontSize14,
-                              color: AppColor.mainColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            BigText(
-                              text: "- ${_deliveryDetail.bargeCode ?? ""}",
-                              size: Dimensions.fontSize14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ],
+                        DisplayRowDataWidget(
+                          firstField: _deliveryDetail.vesselCode ?? "",
+                          secondField: _deliveryDetail.bargeCode ?? "",
+                          firstColor: AppColor.mainColor,
+                          secondColor: Colors.black,
+                          firstSize: Dimensions.fontSize12,
+                          secondSize: Dimensions.fontSize12,
                         )
                       ],
                     ),
-
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -261,98 +235,74 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.VEHICLE_MOOC,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BigText(
-                              text: _deliveryDetail.vehiclePrimaryCode ?? "",
-                              size: Dimensions.fontSize14,
-                              color: AppColor.mainColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            BigText(
-                              text:
-                                  " / ${_deliveryDetail.vehicleSecondaryCode ?? ""}",
-                              size: Dimensions.fontSize14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ],
+                        DisplayRowDataWidget(
+                          firstField: _deliveryDetail.vehiclePrimaryCode ?? "",
+                          secondField:
+                              _deliveryDetail.vehicleSecondaryCode ?? "",
+                          firstColor: AppColor.mainColor,
+                          secondColor: Colors.black,
+                          firstSize: Dimensions.fontSize12,
+                          secondSize: Dimensions.fontSize12,
                         )
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
                     ),
-
                     // Chủ hàng / Đại diện
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SmallText(
                           text: AppMessage.CONSIGNEE_DELEGATE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BigText(
-                              text:
-                                  "${_deliveryDetail.manifestConsigneeCode ?? ""} / ${_deliveryDetail.manifestDelegateCode ?? ""}",
-                              size: Dimensions.fontSize14,
-                              color: Colors.black,
-                            ),
-                          ],
+                        DisplayRowDataWidget(
+                          firstField:
+                              _deliveryDetail.manifestConsigneeCode ?? "",
+                          secondField:
+                              _deliveryDetail.manifestDelegateCode ?? "",
+                          firstColor: Colors.black,
+                          secondColor: Colors.black,
+                          firstSize: Dimensions.fontSize10,
+                          secondSize: Dimensions.fontSize10,
                         )
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
                     ),
-
                     // Bên nhận / Ủy thác
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SmallText(
                           text: AppMessage.RECEIVE_DELEGATE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            BigText(
-                              text:
-                                  "${_deliveryDetail.consigneeCode ?? ""} / ${_deliveryDetail.delegateCode ?? ""}",
-                              size: Dimensions.fontSize14,
-                              color: Colors.black,
-                            ),
-                          ],
+                        DisplayRowDataWidget(
+                          firstField: _deliveryDetail.consigneeCode ?? "",
+                          secondField: _deliveryDetail.delegateCode ?? "",
+                          firstColor: Colors.black,
+                          secondColor: Colors.black,
+                          firstSize: Dimensions.fontSize10,
+                          secondSize: Dimensions.fontSize10,
                         )
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -363,14 +313,14 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.CARGO_CODE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
                               text: _deliveryDetail.cargoName ?? "",
-                              size: Dimensions.fontSize14,
+                              size: Dimensions.fontSize10,
                               color: Colors.black,
                             ),
                           ],
@@ -378,11 +328,8 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -393,14 +340,14 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.BILLOFLANGDING,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
                               text: _deliveryDetail.billOfLading ?? "",
-                              size: Dimensions.fontSize14,
+                              size: Dimensions.fontSize10,
                               color: Colors.black,
                             ),
                           ],
@@ -408,11 +355,8 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -423,14 +367,14 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.SERVICE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
                               text: _deliveryDetail.serviceTypeName ?? "",
-                              size: Dimensions.fontSize14,
+                              size: Dimensions.fontSize10,
                               color: Colors.black,
                             ),
                           ],
@@ -438,24 +382,19 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
                     ),
+
                     // Hướng hàng
                     CargoDirectWiget(
                         cargoDirectId: _deliveryDetail.cargoDirection ?? ""),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -466,14 +405,14 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.OPERATION_TERMINAL,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
                               text: _deliveryDetail.operationTerminalName ?? "",
-                              size: Dimensions.fontSize14,
+                              size: Dimensions.fontSize10,
                               color: Colors.black,
                             ),
                           ],
@@ -481,11 +420,8 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       ],
                     ),
 
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -496,7 +432,7 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.REMAIN_CARGO,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -504,7 +440,7 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                             BigText(
                               text:
                                   "${f.format(int.parse(_deliveryDetail.remainQuantity ?? "0"))} (Kg)",
-                              size: Dimensions.fontSize16,
+                              size: Dimensions.fontSize12,
                               color: AppColor.mainColor,
                               fontWeight: FontWeight.bold,
                             ),
@@ -512,30 +448,36 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                         )
                       ],
                     ),
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
                     ),
-                    //Cân bì
+                    //Cân bì hoặc cân cả hàng phụ thuộc vào hướng hàng của phiếu cân
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SmallText(
-                          text: AppMessage.TARE_WEIGHT,
-                          size: Dimensions.fontSize16,
+                          text: (_deliveryDetail.cargoDirection ==
+                                      AppContants.UNLOADING ||
+                                  _deliveryDetail.cargoDirection ==
+                                      AppContants.STORAGE_EXPORT)
+                              ? AppMessage.TARE_WEIGHT
+                              : AppMessage.GROSS_WEIGHT,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
-                              text:
-                                  "${f.format(int.parse(_deliveryDetail.tareWeight ?? "0"))} (Kg) ${AppMessage.AT} ${formatDateTime(_deliveryDetail.tareTime.toString())}",
-                              size: Dimensions.fontSize16,
+                              text: (_deliveryDetail.cargoDirection ==
+                                          AppContants.UNLOADING ||
+                                      _deliveryDetail.cargoDirection ==
+                                          AppContants.STORAGE_EXPORT)
+                                  ? "${f.format(int.parse(_deliveryDetail.tareWeight ?? "0"))} (Kg) ${AppMessage.AT} ${formatDateTime(_deliveryDetail.tareTime.toString())}"
+                                  : "${f.format(int.parse(_deliveryDetail.grossWeight ?? "0"))} (Kg) ${AppMessage.AT} ${formatDateTime(_deliveryDetail.grossTime.toString())}",
+                              size: Dimensions.fontSize10,
                               color: AppColor.mainColor,
                               fontWeight: FontWeight.bold,
                             ),
@@ -543,11 +485,8 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                         )
                       ],
                     ),
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                   ],
                 ),
@@ -557,8 +496,8 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
             SingleChildScrollView(
               child: Container(
                 color: Colors.white,
-                padding: EdgeInsets.only(
-                    top: Dimensions.height20,
+                margin: EdgeInsets.only(
+                    top: Dimensions.height10,
                     left: Dimensions.width10,
                     right: Dimensions.width10,
                     bottom: Dimensions.height10),
@@ -573,7 +512,7 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.TARE_WEIGHT,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -581,17 +520,14 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                             BigText(
                               text:
                                   "${f.format(int.parse(_deliveryDetail.tareWeight ?? "0"))} (Kg) ${AppMessage.AT} ${formatDateTime(_deliveryDetail.tareTime.toString())}",
-                              size: Dimensions.fontSize16,
+                              size: Dimensions.fontSize12,
                             ),
                           ],
                         )
                       ],
                     ),
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -602,7 +538,7 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.WEIGHT_BY,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -610,17 +546,14 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                             BigText(
                               text:
                                   _deliveryDetail.tareAccountDisplayName ?? "",
-                              size: Dimensions.fontSize16,
+                              size: Dimensions.fontSize12,
                             ),
                           ],
                         )
                       ],
                     ),
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,
@@ -631,14 +564,14 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                       children: [
                         SmallText(
                           text: AppMessage.NOTE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             BigText(
                               text: _deliveryDetail.remark ?? "",
-                              size: Dimensions.fontSize16,
+                              size: Dimensions.fontSize12,
                               color: AppColor.mainColor,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -646,11 +579,8 @@ class _TallyBerthDetailPageState extends State<TallyBerthDetailPage> {
                         )
                       ],
                     ),
-                    Container(
-                      width: Dimensions.screenWidth,
-                      height: 1.2,
-                      margin: const EdgeInsets.only(top: 0),
-                      color: AppColor.lineColor,
+                    DottedLine(
+                      dashColor: AppColor.dotColor,
                     ),
                     SizedBox(
                       height: Dimensions.height10,

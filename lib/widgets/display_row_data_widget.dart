@@ -11,6 +11,7 @@ class DisplayRowDataWidget extends StatelessWidget {
   String char;
   FontWeight fontWeight1;
   FontWeight fontWeight2;
+  MainAxisAlignment align;
 
   DisplayRowDataWidget(
       {super.key,
@@ -22,12 +23,14 @@ class DisplayRowDataWidget extends StatelessWidget {
       required this.secondSize,
       this.char = "-",
       this.fontWeight1 = FontWeight.bold,
-      this.fontWeight2 = FontWeight.bold});
+      this.fontWeight2 = FontWeight.bold,
+      this.align = MainAxisAlignment.start});
 
   @override
   Widget build(BuildContext context) {
     if (secondField.isNotEmpty) {
       return Row(
+        mainAxisAlignment: align,
         children: [
           BigText(
             text: firstField,
@@ -45,6 +48,7 @@ class DisplayRowDataWidget extends StatelessWidget {
       );
     }
     return Row(
+      mainAxisAlignment: align,
       children: [
         BigText(
           text: firstField,

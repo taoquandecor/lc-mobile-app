@@ -2,9 +2,9 @@ class AppContants {
   static const String APP_NAME = "LCMobileApp";
   static const int APP_VERSION = 1;
 
-  //static const String BASE_URL = "http://172.18.122.56:8000";
-  static const String BASE_URL = "https://api-uat.cyberlogs.vn";
-  //static const String BASE_URL = "http://192.168.1.7:8000";
+  //static const String BASE_URL = "http://172.18.122.57:8000";
+  //static const String BASE_URL = "https://api-uat.cyberlogs.vn";
+  static const String BASE_URL = "http://192.168.1.6:8000";
 
   // profile and user
   static const String LOGIN_URL = "/mobile/login";
@@ -18,6 +18,9 @@ class AppContants {
       "/mobile/delivery-details/registration-ticket-mobile";
   static const String PENDING_TICKET =
       "/mobile/delivery-details/pending-ticket-mobile";
+  static const String UPLOAD_TICKET = "/mobile/delivery-details/ticket-mobile";
+  static const String TALLY_BERTH_TICKET =
+      "/mobile/delivery-details/tally-berth-ticket-mobile";
   static const String HISTORY_WEIGHT_EMPTY =
       "/mobile/delivery-details/get-history-weight-empty";
   static const String UPDATE_URI = "/mobile/delivery-details/mobile-update/";
@@ -53,5 +56,14 @@ class AppContants {
   static const String STORAGE_IMPORT = "3";
   static const String STORAGE_EXPORT = "4";
 
+  static const String FIRST_WEIGHT = "FirstWeight";
+  static const String SECOND_WEIGHT = "TallyBerth";
+
   static const Map<String, String> HEADER_IMAGE = {"Connection": 'Keep-Alive'};
+
+  static const String TARE_WF = 'W.TARE';
+  static const String UPLOAD_TICKET_WF = 'UPLOAD.TICKET';
+  static const String GROSS_WF = 'W.GROSS';
+  static const String VERIFY_TICKET_WF = 'VERIFY.TICKET';
+  static const String BERTH_TALLY_WF = 'BERTH.TALLY';
 }

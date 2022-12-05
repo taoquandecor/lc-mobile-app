@@ -41,51 +41,36 @@ class Data {
 }
 
 class DeliveryDetailWorkFlowModel {
-  String? id;
   String? deliveryDetailId;
-  String? sequence;
   String? workFlowId;
-  String? remark;
-  String? deleted;
-  String? createdDate;
+  String? deliveryOrderId;
+  String? wFCode;
+  String? wFName;
+  String? sequence;
   String? createdBy;
-  String? changedDate;
-  String? changedBy;
-  String? workFlowCode;
-  String? siteId;
-  String? workFlowName;
-  String? createByName;
+  String? createdDate;
+  String? remark;
 
   DeliveryDetailWorkFlowModel(
-      {this.id,
-      this.deliveryDetailId,
+      {this.deliveryDetailId,
+      this.deliveryOrderId,
       this.sequence,
       this.workFlowId,
       this.remark,
-      this.deleted,
       this.createdDate,
       this.createdBy,
-      this.changedDate,
-      this.changedBy,
-      this.workFlowCode,
-      this.siteId,
-      this.workFlowName,
-      this.createByName});
+      this.wFCode,
+      this.wFName});
 
   DeliveryDetailWorkFlowModel.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
     deliveryDetailId = json['DeliveryDetailId'];
     sequence = json['Sequence'];
     workFlowId = json['WorkFlowId'];
     remark = json['Remark'];
-    deleted = json['Deleted'];
     createdDate = json['CreatedDate'];
     createdBy = json['CreatedBy'];
-    changedDate = json['ChangedDate'];
-    changedBy = json['ChangedBy'];
-    workFlowCode = json['WorkFlowCode'];
-    siteId = json['SiteId'];
-    workFlowName = json['WorkFlowName'];
-    createByName = json['CreateByName'];
+    wFCode = json['WFCode'];
+    wFName = json['WFName'];
+    deliveryOrderId = json['DeliveryOrderId'];
   }
 }

@@ -18,8 +18,14 @@ class DeliveryDetailController extends GetxController implements GetxService {
   List<DeliveryDetailModel> _registerTicketList = [];
   List<DeliveryDetailModel> get registerTicketList => _registerTicketList;
 
+  List<DeliveryDetailModel> _ticketList = [];
+  List<DeliveryDetailModel> get ticketList => _ticketList;
+
   List<DeliveryDetailModel> _pendingTicketList = [];
   List<DeliveryDetailModel> get pendingTicketList => _pendingTicketList;
+
+  List<DeliveryDetailModel> _tallyBerthTicketList = [];
+  List<DeliveryDetailModel> get tallyBerthTicketList => _tallyBerthTicketList;
 
   List<HistoryWeightModel> _historyWeightList = [];
   List<HistoryWeightModel> get historyWeightList => _historyWeightList;
@@ -74,6 +80,74 @@ class DeliveryDetailController extends GetxController implements GetxService {
     }
   }
 
+  // Lấy danh sách phiếu cân upload ảnh
+  Future<void> getTicketList() async {
+    Response response = await deliveryDetailRepo.getDeliveryDetailList(2);
+    _ticketList = [];
+    try {
+      if (response.statusCode == 200) {
+        if (response.body["Code"] == 406) {
+          // token timeout(
+          _tokenTimeOut = TokenTimeOut(isTimeOut: true);
+        } else {
+          _tokenTimeOut = TokenTimeOut(isTimeOut: false);
+          _ticketList.addAll(
+              DeliveryDetails.fromJson(response.body).data.deliveryDetails);
+          _isLoaded = true;
+          update();
+        }
+      } else {
+        Get.snackbar(
+          AppMessage.WEIGHT_NET_TAB,
+          response.statusText.toString(),
+          backgroundColor: AppColor.errorColor,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        AppMessage.WEIGHT_NET_TAB,
+        e.toString(),
+        backgroundColor: AppColor.errorColor,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+/* Lấy danh sách phiếu cân cầu bến */
+  Future<void> getTallyBerthTicketList() async {
+    Response response = await deliveryDetailRepo.getDeliveryDetailList(3);
+    _tallyBerthTicketList = [];
+    try {
+      if (response.statusCode == 200) {
+        if (response.body["Code"] == 406) {
+          // token timeout(
+          _tokenTimeOut = TokenTimeOut(isTimeOut: true);
+        } else {
+          _tokenTimeOut = TokenTimeOut(isTimeOut: false);
+          _tallyBerthTicketList.addAll(
+              DeliveryDetails.fromJson(response.body).data.deliveryDetails);
+          _isLoaded = true;
+          update();
+        }
+      } else {
+        Get.snackbar(
+          AppMessage.WEIGHT_NET_TAB,
+          response.statusText.toString(),
+          backgroundColor: AppColor.errorColor,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        AppMessage.WEIGHT_NET_TAB,
+        e.toString(),
+        backgroundColor: AppColor.errorColor,
+        colorText: Colors.white,
+      );
+    }
+  }
+
   /*
     Lấy danh sách cân chốt (chờ cân)
   */
@@ -85,6 +159,7 @@ class DeliveryDetailController extends GetxController implements GetxService {
           // token timeout(
           _tokenTimeOut = TokenTimeOut(isTimeOut: true);
         } else {
+          _tokenTimeOut = TokenTimeOut(isTimeOut: false);
           _pendingTicketList = [];
           _pendingTicketList.addAll(
               DeliveryDetails.fromJson(response.body).data.deliveryDetails);
@@ -162,9 +237,11 @@ class DeliveryDetailController extends GetxController implements GetxService {
         if (response.body["Code"] == 460) {
           _tokenTimeOut = TokenTimeOut(isTimeOut: true);
           responseModel = ResponseModel(false, AppMessage.TOKEN_TIMEOUT);
-        } else {
+        } else if (response.body["Code"] == 200) {
           _tokenTimeOut = TokenTimeOut(isTimeOut: false);
           responseModel = ResponseModel(true, response.body["Message"]);
+        } else {
+          responseModel = ResponseModel(false, response.body["Errors"]);
         }
       } else {
         responseModel = ResponseModel(false, response.statusText.toString());
@@ -218,9 +295,11 @@ class DeliveryDetailController extends GetxController implements GetxService {
         if (response.body["Code"] == 460) {
           _tokenTimeOut = TokenTimeOut(isTimeOut: true);
           responseModel = ResponseModel(false, AppMessage.TOKEN_TIMEOUT);
-        } else {
+        } else if (response.body["Code"] == 200) {
           _tokenTimeOut = TokenTimeOut(isTimeOut: false);
-          responseModel = ResponseModel(false, response.body["Errors"]);
+          responseModel = ResponseModel(true, response.body["Message"]);
+        } else {
+          responseModel = ResponseModel(false, response.body["Error"]);
         }
       } else {
         responseModel = ResponseModel(false, response.statusText.toString());

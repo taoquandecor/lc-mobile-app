@@ -40,14 +40,14 @@ class CargoDirectWiget extends StatelessWidget {
       children: [
         SmallText(
           text: AppMessage.CARGO_DIRECT,
-          size: Dimensions.fontSize16,
+          size: Dimensions.fontSize12,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             BigText(
               text: _getCargoDirectName(),
-              size: Dimensions.fontSize14,
+              size: Dimensions.fontSize10,
               color: Colors.black,
             ),
           ],

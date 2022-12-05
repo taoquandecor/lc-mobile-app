@@ -6,12 +6,15 @@ class AppMessage {
   // Tally bốt cân
   static const String WEIGHT_PLAN_TAB = "Kế hoạch";
   static const String WEIGHT_NET_TAB = "Cân chốt";
-  static const String TALLY_WEIGHT_BOT = "Tally bốt cân";
-  static const String TALLY_WEIGHT_BERTH = "Tally cầu bến";
+  static const String TALLY_WEIGHT_BOT = "TALLY CÂN";
+  static const String TALLY_WEIGHT_BERTH = "TALLY CẦU BẾN";
+  static const String TALLY_BERTH = "Tally cầu bến";
+  static const String WEIGHT_OUT_TEXT = "Cân chốt";
 
   static const String REGISTRATION_TICKET_ERROR =
-      "Can not got registration ticket";
-  static const String PENDING_TICKET_ERROR = "Can not got pending ticket";
+      "Không thể lấy được danh sách phiếu đăng ký";
+  static const String PENDING_TICKET_ERROR =
+      "Không thể lấy được danh sách phiếu chờ";
 
   static const String HINT_TEXT_TALLY_WEIGHT_BOT = "Biển số xe";
 
@@ -32,8 +35,8 @@ class AppMessage {
   static const String REMAIN_CARGO = "Hàng còn lại";
   static const String WEIGHT_TICKET = "Phiếu cân";
 
-  static const String WEIGHT_INPUT = "Cân vào";
-  static const String WEIGHT_OUT = "Cân chốt";
+  static const String WEIGHT_INPUT = "CÂN VÀO";
+  static const String WEIGHT_OUT = "CÂN CHỐT";
 
   static const String LOADING = "LOADING";
   static const String UNLOADING = "UNLOADING";
@@ -54,10 +57,11 @@ class AppMessage {
   static const String DELIVERY_DETAIL_CODE = "Số phiếu";
   static const String WEIGHT_BY = "Cân bởi";
   static const String NOTE = "Lưu ý";
-  static const String SELECT_BARGE = "Select a barge";
+  static const String SELECT_BARGE = "Chọn sà lan";
   static const String ADD_IMAGE = "Thêm ảnh";
   static const String CHOOSE_IMAGE_FROM_LIBRARY = "Chọn ảnh từ thư viện";
   static const String TAKE_PICTURE = "Chụp ảnh";
+  static const String WEIGHT_IN = "TL vào:";
 
   // account
   static const String PROFILE = "Profile";
@@ -96,19 +100,24 @@ class AppMessage {
   static const String ERROR_MESSAGE2 = "Số cân phải là số";
   static const String ERROR_MESSAGE3 =
       "Ghi chú quá dài. Đề nghị nhập ghi chú có độ dài < 30 ký tự";
-  static const String TOKEN_TIMEOUT = "Token is timeout";
-  static const String INVALID_EMAIL_MESSAGE = "Type in a valid email address";
-  static const String EMPTY_EMAIL_MESSAGE = "Type in a your email address";
-  static const String EMPTY_FULLNAME_MESSAGE = "Type in a your name";
-  static const String EMPTY_PHONE_MESSAGE = "Type in a your phone";
-  static const String EMPTY_OLDPASS_MESSAGE = "Type in a your old password";
-  static const String EMPTY_NEWPASS_MESSAGE = "Type in a your new password";
-  static const String EMPTY_RENEW_MESSAGE = "Type in a your re-new password";
-  static const String ERROR_MESSAGE4 = "Password is not match";
-  static const String ERROR_MESSAGE5 = "Token is expired. Please login again!";
-  static const String ERROR_MESSAGE6 = "UserName is not empty";
-  static const String ERROR_MESSAGE7 = "Password is not empty";
+  static const String TOKEN_TIMEOUT = "Token";
+  static const String INVALID_EMAIL_MESSAGE = "Sai định dạng địa chỉ Email";
+  static const String EMPTY_EMAIL_MESSAGE = "Địa chỉ email không để trống";
+  static const String EMPTY_FULLNAME_MESSAGE = "Họ và tên không để trống";
+  static const String EMPTY_PHONE_MESSAGE = "Số điện thoại không để trống";
+  static const String EMPTY_OLDPASS_MESSAGE = "Mật khẩu cũ không để trống";
+  static const String EMPTY_NEWPASS_MESSAGE = "Mật khẩu mới không để trống";
+  static const String EMPTY_RENEW_MESSAGE = "Nhắc lại mật khẩu không để trống";
+  static const String ERROR_MESSAGE4 = "Mật khẩu không khớp";
+  static const String ERROR_MESSAGE5 =
+      "Token đã hết hạn. Đề nghị đăng nhập lại";
+  static const String ERROR_MESSAGE6 = "Tên đăng nhâp không để trống";
+  static const String ERROR_MESSAGE7 = "Mật khẩu không để trống";
 
   // success message
-  static const String SUCCESS_MESSAGE1 = "Lưu thành công";
+  static const String SUCCESS_MESSAGE1 = "Lưu dữ liệu thành công.";
+  static const String UPLOAD_IMAGE_SUCCESSFULL = "Upload ảnh thành công.";
+
+  // warning message
+  static const String WARNING_MESSAGE1 = "Hệ thống mặc định là tiếng việt";
 }

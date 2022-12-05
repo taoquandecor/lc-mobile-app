@@ -13,6 +13,10 @@ class DeliveryDetailRepo extends GetxService {
     String uri = AppContants.REGISTRATION_TICKET;
     if (type == 1) {
       uri = AppContants.PENDING_TICKET;
+    } else if (type == 2) {
+      uri = AppContants.UPLOAD_TICKET;
+    } else if (type == 3) {
+      uri = AppContants.TALLY_BERTH_TICKET;
     }
     return await apiClient.postData(uri, {"TerminalId": apiClient.terminal});
   }

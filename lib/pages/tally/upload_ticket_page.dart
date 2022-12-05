@@ -1,18 +1,15 @@
-import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lcmobileapp/base/custom_loader.dart';
 import 'package:lcmobileapp/base/show_custom_snackbar.dart';
 import 'package:lcmobileapp/controller/attachment_controller.dart';
 import 'package:lcmobileapp/controller/delivery_detail_controller.dart';
-import 'package:lcmobileapp/controller/user_controller.dart';
-import 'package:lcmobileapp/models/attachment_model.dart';
-import 'package:lcmobileapp/models/delivery_detail_body_model.dart';
 import 'package:lcmobileapp/models/delivery_detail_model.dart';
 import 'package:lcmobileapp/models/delivery_detail_work_flow_model.dart';
 import 'package:lcmobileapp/models/token_timeout_model.dart';
+import 'package:lcmobileapp/models/upload_ticket_model.dart';
 import 'package:lcmobileapp/pages/home/home_page.dart';
-import 'package:lcmobileapp/route/route_helper.dart';
+import 'package:lcmobileapp/utils/app_arguments.dart';
 import 'package:lcmobileapp/utils/app_color.dart';
 import 'package:lcmobileapp/utils/app_constants.dart';
 import 'package:lcmobileapp/utils/app_message.dart';
@@ -21,7 +18,6 @@ import 'package:lcmobileapp/widgets/app_icon.dart';
 import 'package:lcmobileapp/widgets/big_text.dart';
 import 'package:lcmobileapp/widgets/cargo_direct_widget.dart';
 import 'package:lcmobileapp/widgets/display_row_data_widget.dart';
-import 'package:lcmobileapp/widgets/edit_box_widget.dart';
 import 'package:lcmobileapp/widgets/small_text.dart';
 import 'package:timelines/timelines.dart';
 import 'package:get/get.dart';
@@ -29,16 +25,17 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'package:dotted_line/dotted_line.dart';
 
-class SecondWeightDetailPage extends StatefulWidget {
+class UploadTicketPage extends StatefulWidget {
   int pageId;
-  SecondWeightDetailPage({super.key, required this.pageId});
+  UploadTicketPage({super.key, required this.pageId});
 
   @override
-  State<SecondWeightDetailPage> createState() => _SecondWeightDetailPageState();
+  State<UploadTicketPage> createState() => _UploadTicketPageState();
 }
 
-class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
+class _UploadTicketPageState extends State<UploadTicketPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
   int _currentIndex = 0;
@@ -74,7 +71,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
   @override
   Widget build(BuildContext context) {
     DeliveryDetailModel _deliveryDetail =
-        Get.find<DeliveryDetailController>().pendingTicketList[widget.pageId];
+        Get.find<DeliveryDetailController>().ticketList[widget.pageId];
 
     var f = NumberFormat(AppContants.FORMAT_NUMER);
     var vehiclePrimaryId = _deliveryDetail.vehiclePrimaryId ?? "";
@@ -87,23 +84,13 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
     _delvieryDetailWFList =
         Get.find<DeliveryDetailController>().deliveryDetailWFList;
 
-    // Lấy thông tin ảnh đã upload
-    Get.find<AttachmentController>().getImageTicket(deliveryDetailId);
-    AttachmentModel _attachmentModel =
-        Get.find<AttachmentController>().attachmentModel;
-
     String imageUrl = "";
-    String imagePath = _attachmentModel.path ?? "";
 
-    Widget showImage() {
+    String getFileExtension(String fileName) {
       try {
-        if (imagePath.isEmpty) {
-          return Image.asset("assets/images/no_image_available.png");
-        }
-        imageUrl = AppContants.BASE_URL + AppContants.SLASH + imagePath;
-        return Image.network(imageUrl, headers: AppContants.HEADER_IMAGE);
+        return fileName.split('.').last;
       } catch (e) {
-        return Image.asset("assets/images/no_image_available.png");
+        return "";
       }
     }
 
@@ -117,6 +104,31 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
       outputDate = outputFormat.format(inputDate);
 
       return outputDate;
+    }
+
+    void uploadImage(AttachmentController attachmentController,
+        String imagePath, String imageName) {
+      final File file = File(imagePath);
+      final bytes = file.readAsBytesSync();
+      String ext = getFileExtension(imagePath);
+      String base64Image = 'data:image/$ext;base64,${base64Encode(bytes)}';
+      String fileSize = file.lengthSync().toString();
+      UploadTicketModel _uploadTicketModel = UploadTicketModel(
+          file: base64Image,
+          entityId: deliveryDetailId,
+          fileName: imageName,
+          fileSize: fileSize,
+          type: 1);
+      attachmentController.uploadTicket(_uploadTicketModel).then((status) {
+        Navigator.pop(context);
+        if (status.isSuccess) {
+          Get.to(() => const HomePage(), arguments: "FirstWeight");
+          Get.snackbar(
+              AppMessage.WEIGHT_OUT, AppMessage.UPLOAD_IMAGE_SUCCESSFULL);
+        } else {
+          showCustomSnackBar(status.message);
+        }
+      });
     }
 
     void onTextChanged(String text) {
@@ -140,64 +152,122 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
       });
     }
 
-    void updateWeightNumber() {
-      String number = weightController.text.trim();
-      String remark = remarkController.text.trim();
-      if (number.isEmpty) {
-        showCustomSnackBar(AppMessage.ERROR_MESSAGE1,
-            title: AppMessage.WEIGHT_INPUT);
-      } else if (!GetUtils.isNum(number)) {
-        showCustomSnackBar(AppMessage.ERROR_MESSAGE2,
-            title: AppMessage.WEIGHT_INPUT);
-      } else if (remark.length > 30) {
-        showCustomSnackBar(AppMessage.ERROR_MESSAGE3,
-            title: AppMessage.WEIGHT_INPUT);
-      } else {
-        String cargoDirection = _deliveryDetail.cargoDirection!;
-        late DeliveryDetailBody deliveryDetailBody;
-        if (cargoDirection == AppContants.LOADING ||
-            cargoDirection == AppContants.STORAGE_IMPORT) {
-          // Loading hoặc import thì cân chốt là empty
-          deliveryDetailBody = DeliveryDetailBody(
-            grossWeight: 0,
-            remark: remark,
-            tareScaleId: "",
-            grossScaleId: "",
-            tareWeight: int.parse(number),
-            workflowCode: AppContants.TARE_WF,
-          );
-        } else if (cargoDirection == AppContants.UNLOADING ||
-            cargoDirection == AppContants.STORAGE_EXPORT) {
-          // dỡ hàng hoặc xuất kho thì cân chốt là gross
-          deliveryDetailBody = DeliveryDetailBody(
-            grossWeight: int.parse(number),
-            remark: remark,
-            tareScaleId: "",
-            grossScaleId: "",
-            tareWeight: 0,
-            workflowCode: AppContants.GROSS_WF,
-          );
-        }
-
-        Get.find<DeliveryDetailController>()
-            .updateWeight(deliveryDetailBody, _deliveryDetail.id.toString())
-            .then((status) {
-          if (status.isSuccess) {
-            Get.to(() => const HomePage(), arguments: "FirstWeight");
-            Get.snackbar(AppMessage.WEIGHT_OUT, AppMessage.SUCCESS_MESSAGE1);
-          } else {
-            TokenTimeOut _tokenTimeout =
-                Get.find<DeliveryDetailController>().tokenTimeOut;
-            if (_tokenTimeout.isTimeOut) {
-              Get.find<UserController>().clearSharedData();
-              Get.offNamed(RouteHelper.getLoginPage());
-              Get.snackbar("Token", AppMessage.ERROR_MESSAGE5);
-            } else {
-              Get.snackbar(AppMessage.WEIGHT_OUT, status.message);
-            }
+    void getImgFromGallary(AttachmentController attachmentController) async {
+      try {
+        final image =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+        String imageName = "";
+        setState(() {
+          if (image != null) {
+            imageUrl = image.path;
+            imageName = image.name;
           }
         });
+        uploadImage(attachmentController, imageUrl, imageName);
+      } on PlatformException catch (e) {
+        showCustomSnackBar("Failed to pick image: $e");
       }
+    }
+
+    void getImgFromCamera(AttachmentController attachmentController) async {
+      try {
+        final image = await ImagePicker().pickImage(source: ImageSource.camera);
+        String imageName = "";
+        setState(() {
+          if (image != null) {
+            imageUrl = image.path;
+            imageName = image.name;
+          }
+        });
+        uploadImage(attachmentController, imageUrl, imageName);
+      } on PlatformException catch (e) {
+        showCustomSnackBar("Failed to pick image: $e");
+      }
+    }
+
+    void _showModalBottomSheet(context) {
+      showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(Dimensions.radius15),
+          ),
+        ),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        builder: (BuildContext context) {
+          return Container(
+              height: Dimensions.height50 * 4,
+              color:
+                  Colors.transparent, //could change this to Color(0xFF737373),
+              //so you don't have to change MaterialApp canvasColor
+              child: GetBuilder<AttachmentController>(
+                builder: (attachmentController) {
+                  return SingleChildScrollView(
+                    child: Container(
+                        margin: EdgeInsets.only(
+                            left: Dimensions.width15,
+                            right: Dimensions.width15),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: Dimensions.height45,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    iconSize: Dimensions.iconSize24,
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const Icon(Icons.close),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: Dimensions.height45,
+                              width: Dimensions.width20 * 18,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  getImgFromCamera(attachmentController);
+                                },
+                                style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(
+                                      AppColor.mainColor),
+                                  shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                      RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              Dimensions.radius15),
+                                          side: BorderSide(
+                                              color: AppColor.mainColor))),
+                                ),
+                                child: BigText(
+                                  text: AppMessage.TAKE_PICTURE,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: Dimensions.height20,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                getImgFromGallary(attachmentController);
+                              },
+                              child: BigText(
+                                text: AppMessage.CHOOSE_IMAGE_FROM_LIBRARY,
+                                size: Dimensions.fontSize20,
+                                color: AppColor.mainColor,
+                              ),
+                            )
+                          ],
+                        )),
+                  );
+                },
+              ));
+        },
+      );
     }
 
     return DefaultTabController(
@@ -226,7 +296,6 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
             },
             indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.tab,
-            isScrollable: true,
             tabs: [
               Tab(
                 // tab chi tiết
@@ -249,10 +318,10 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                   ),
                 ),
               ),
-              // Cân chốt
+              // Phiếu cân
               Tab(
                 icon: AppIcon(
-                  icon: Icons.scale_outlined,
+                  icon: Icons.airplane_ticket,
                   iconColor:
                       _currentIndex == 1 ? AppColor.mainColor : Colors.grey,
                   iconSize: Dimensions.fontSize20,
@@ -263,7 +332,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
-                    text: AppMessage.WEIGHT_OUT_TEXT,
+                    text: AppMessage.WEIGHT_TICKET,
                     size: Dimensions.fontSize12,
                     color:
                         _currentIndex == 1 ? AppColor.mainColor : Colors.grey,
@@ -611,250 +680,56 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
               ),
             ),
             // Chụp ảnh phiếu cân
-            // Container(
-            //   color: Colors.white,
-            //   padding: EdgeInsets.only(
-            //       top: Dimensions.height20,
-            //       left: Dimensions.width10,
-            //       right: Dimensions.width10,
-            //       bottom: Dimensions.height10),
-            //   height: Dimensions.height50,
-            //   child: Column(
-            //     children: [
-            //       Container(
-            //         margin: EdgeInsets.only(
-            //             top: Dimensions.height10,
-            //             left: Dimensions.width10,
-            //             right: Dimensions.width10),
-            //         child: SizedBox(
-            //           height: Dimensions.height45,
-            //           width: Dimensions.screenWidth - Dimensions.height20,
-            //           child: ElevatedButton(
-            //             onPressed: () {
-            //               _showModalBottomSheet(context);
-            //             },
-            //             style: ButtonStyle(
-            //               backgroundColor:
-            //                   MaterialStateProperty.all(AppColor.mainColor),
-            //               shape: MaterialStateProperty.all<
-            //                       RoundedRectangleBorder>(
-            //                   RoundedRectangleBorder(
-            //                       borderRadius: BorderRadius.circular(
-            //                           Dimensions.radius15),
-            //                       side: BorderSide(color: AppColor.mainColor))),
-            //             ),
-            //             child: BigText(
-            //               text: AppMessage.ADD_IMAGE,
-            //               color: Colors.white,
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // Nội dung cân chốt
-            SingleChildScrollView(
-              child: Container(
-                color: Colors.white,
-                margin: EdgeInsets.only(
-                    top: Dimensions.height10,
-                    left: Dimensions.width10,
-                    right: Dimensions.width10,
-                    bottom: Dimensions.height10),
-                child: Column(children: [
+            Container(
+              color: Colors.white,
+              margin: EdgeInsets.only(
+                  top: Dimensions.height10,
+                  left: Dimensions.width10,
+                  right: Dimensions.width10,
+                  bottom: Dimensions.height10),
+              height: Dimensions.height50,
+              child: Column(
+                children: [
                   Container(
-                    height: Dimensions.height50 * 4.5,
-                    decoration: BoxDecoration(
-                      borderRadius:
-                          BorderRadius.circular(Dimensions.radius15 / 3),
+                    margin: EdgeInsets.only(
+                        top: Dimensions.height10,
+                        left: Dimensions.width10,
+                        right: Dimensions.width10),
+                    child: SizedBox(
+                      height: Dimensions.height45,
+                      width: Dimensions.screenWidth - Dimensions.height20,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _showModalBottomSheet(context);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(AppColor.mainColor),
+                          shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radius15),
+                                  side: BorderSide(color: AppColor.mainColor))),
+                        ),
+                        child: BigText(
+                          text: AppMessage.ADD_IMAGE,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                    child: showImage(),
                   ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  //Hàng còn lại
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SmallText(
-                        text: AppMessage.REMAIN_CARGO,
-                        size: Dimensions.fontSize12,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          BigText(
-                            text:
-                                "${f.format(int.parse(_deliveryDetail.remainQuantity ?? "0"))} (Kg)",
-                            size: Dimensions.fontSize12,
-                            color: AppColor.mainColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  DottedLine(
-                    dashColor: AppColor.dotColor,
-                  ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  //Cân bì
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SmallText(
-                        text: (_deliveryDetail.cargoDirection ==
-                                    AppContants.UNLOADING ||
-                                _deliveryDetail.cargoDirection ==
-                                    AppContants.STORAGE_EXPORT)
-                            ? AppMessage.TARE_WEIGHT
-                            : AppMessage.GROSS_WEIGHT,
-                        size: Dimensions.fontSize12,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          BigText(
-                            text: (_deliveryDetail.cargoDirection ==
-                                        AppContants.UNLOADING ||
-                                    _deliveryDetail.cargoDirection ==
-                                        AppContants.STORAGE_EXPORT)
-                                ? "${f.format(int.parse(_deliveryDetail.tareWeight ?? "0"))} (Kg)"
-                                : "${f.format(int.parse(_deliveryDetail.grossWeight ?? "0"))} (Kg)",
-                            size: Dimensions.fontSize12,
-                            color: AppColor.mainColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  DottedLine(
-                    dashColor: AppColor.dotColor,
-                  ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-                  //Hàng
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SmallText(
-                        text: AppMessage.NET_WEIGHT,
-                        size: Dimensions.fontSize12,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          BigText(
-                            text: "${f.format(_netWeight)} (Kg)",
-                            size: Dimensions.fontSize12,
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  DottedLine(
-                    dashColor: AppColor.dotColor,
-                  ),
-                  SizedBox(
-                    height: Dimensions.height10,
-                  ),
-
-                  Container(
-                    padding: EdgeInsets.only(
-                        left: Dimensions.width10 / 5,
-                        right: Dimensions.width10 / 5),
-                    child: Column(
-                      children: [
-                        // nhập số cân
-                        TextFormField(
-                          controller: weightController,
-                          onChanged: (value) {
-                            onTextChanged(value);
-                          },
-                          textAlign: TextAlign.right,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: Dimensions.width10,
-                                horizontal: Dimensions.width10),
-                            hintText: AppMessage.INPUT_WEIGHT_NUMBER,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.circular(Dimensions.radius15),
-                            ),
-                            prefixIcon: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  weightController.text = "";
-                                });
-                                onTextChanged('');
-                              },
-                              child: const Icon(Icons.clear),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: Dimensions.height10,
-                        ),
-                        // ghi chú
-                        EditBoxWidget(
-                          hint: AppMessage.REMARK,
-                          controller: remarkController,
-                          showClearIcon: true,
-                        ),
-
-                        // chấp nhận
-                        Container(
-                          margin: EdgeInsets.only(
-                              top: Dimensions.height10,
-                              left: Dimensions.width10,
-                              right: Dimensions.width10),
-                          child: SizedBox(
-                            height: Dimensions.height45,
-                            width: Dimensions.screenWidth - Dimensions.height20,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                updateWeightNumber();
-                              },
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all(
-                                    AppColor.mainColor),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            Dimensions.radius15),
-                                        side: BorderSide(
-                                            color: AppColor.mainColor))),
-                              ),
-                              child: BigText(
-                                text: AppMessage.ACCEPT,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ]),
+                ],
               ),
             ),
             // Nội dung tab trình tự
             Container(
                 color: Colors.white,
                 margin: EdgeInsets.only(
-                    top: Dimensions.height10,
-                    left: Dimensions.width10,
-                    right: Dimensions.width10,
-                    bottom: Dimensions.height10),
+                  top: Dimensions.height10,
+                  left: Dimensions.width10,
+                  right: Dimensions.width10,
+                ),
                 child: GetBuilder<DeliveryDetailController>(
                   builder: ((deliveryDetailWFController) {
                     Widget timeWidget(int index) {
@@ -864,8 +739,8 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                       if (index < _delvieryDetailWFList.length) {
                         if (createdDate != "") {
                           DateTime parseDate =
-                              DateFormat(AppContants.SQL_DATETIME_FORMAT).parse(
-                                  _delvieryDetailWFList[index].createdDate!);
+                              DateFormat(AppContants.SQL_DATETIME_FORMAT)
+                                  .parse(createdDate);
                           var inputDate = DateTime.parse(parseDate.toString());
                           var outputFormat =
                               DateFormat(AppContants.DATE_FORMAT2);
@@ -876,7 +751,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                       }
                       return BigText(
                         text: outputDate,
-                        size: Dimensions.fontSize12,
+                        size: Dimensions.fontSize16,
                       );
                     }
 

@@ -9,26 +9,28 @@ class ManifestWidget extends StatelessWidget {
   String consigneeCode;
   String delegrateCode;
   String cargoCode;
+  double size;
 
   ManifestWidget(
       {super.key,
       required this.billOfLading,
       required this.consigneeCode,
       this.delegrateCode = "",
-      required this.cargoCode});
+      required this.cargoCode,
+      required this.size});
 
   @override
   Widget build(BuildContext context) {
     if (delegrateCode.isEmpty) {
       return BigText(
         text: "$billOfLading*$consigneeCode*$cargoCode",
-        size: Dimensions.fontSize12,
+        size: size,
         color: Colors.black,
       );
     }
     return BigText(
       text: "$billOfLading*$consigneeCode*$delegrateCode*$cargoCode",
-      size: Dimensions.fontSize12,
+      size: size,
       color: Colors.black,
     );
   }

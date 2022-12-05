@@ -35,21 +35,23 @@ class AttachmentModel {
       this.type});
 
   AttachmentModel.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
-    siteId = json['SiteId'];
-    entityId = json['EntityId'];
-    displayName = json['DisplayName'];
-    rawName = json['RawName'];
-    path = json['Path'];
-    extension = json['Extension'];
-    fileSize = json['FileSize'];
-    status = json['Status'];
-    deleted = json['Deleted'];
-    createdDate = json['CreatedDate'];
-    createdBy = json['CreatedBy'];
-    changedDate = json['ChangedDate'];
-    changedBy = json['ChangedBy'];
-    publicPortal = json['PublicPortal'];
-    type = json['Type'];
+    if (json != null) {
+      id = json['Id'];
+      siteId = json['SiteId'];
+      entityId = json['EntityId'];
+      displayName = json['DisplayName'];
+      rawName = json['RawName'];
+      path = json['Path'];
+      extension = json['Extension'];
+      fileSize = json['FileSize'];
+      status = json['Status'];
+      deleted = json['Deleted'];
+      createdDate = json['CreatedDate'];
+      createdBy = json['CreatedBy'];
+      changedDate = json['ChangedDate'];
+      changedBy = json['ChangedBy'];
+      publicPortal = json['PublicPortal'];
+      type = json['Type'];
+    }
   }
 }

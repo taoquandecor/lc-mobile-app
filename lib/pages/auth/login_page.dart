@@ -18,6 +18,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _passwordVisible = false;
+  final userNameController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -32,9 +34,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userNameController = TextEditingController();
-    final passwordController = TextEditingController();
-
     void login(AuthController authController) {
       String userName = userNameController.text;
       String passWord = passwordController.text;
@@ -43,15 +42,17 @@ class _LoginPageState extends State<LoginPage> {
       // String passWord = '123456a@';
 
       if (userName.isEmpty) {
-        showCustomSnackBar(AppMessage.ERROR_MESSAGE6, title: "UserName");
+        showCustomSnackBar(AppMessage.ERROR_MESSAGE6,
+            title: AppMessage.USERNAME);
       } else if (passWord.isEmpty) {
-        showCustomSnackBar(AppMessage.ERROR_MESSAGE7, title: "Password");
+        showCustomSnackBar(AppMessage.ERROR_MESSAGE7,
+            title: AppMessage.PASSWORD);
       } else {
         authController.login(userName, passWord).then((status) {
           if (status.isSuccess) {
             Get.toNamed(RouteHelper.getInitialPage());
           } else {
-            showCustomSnackBar(status.message, title: "Login");
+            showCustomSnackBar(status.message, title: AppMessage.LOGIN_TEXT);
           }
         });
       }
@@ -73,8 +74,8 @@ class _LoginPageState extends State<LoginPage> {
                             TextButton(
                                 onPressed: () {
                                   showCustomSnackBar(
-                                      "Hệ thống mặc định là tiếng việt",
-                                      title: "Login");
+                                      AppMessage.WARNING_MESSAGE1,
+                                      title: AppMessage.LOGIN_TEXT);
                                 },
                                 child: const Image(
                                   fit: BoxFit.cover,
@@ -116,9 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                               right: Dimensions.width10),
                           child: Column(children: [
                             TextFormField(
-                              onChanged: ((value) {
-                                userNameController.text = value;
-                              }),
+                              controller: userNameController,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.person),
                                 contentPadding: EdgeInsets.symmetric(
@@ -135,9 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                               height: Dimensions.height10,
                             ),
                             TextFormField(
-                              onChanged: (value) {
-                                passwordController.text = value;
-                              },
+                              controller: passwordController,
                               obscureText: !_passwordVisible,
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.key),
