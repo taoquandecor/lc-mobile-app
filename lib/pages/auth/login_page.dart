@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
           return !authController.isLoading
               ? SingleChildScrollView(
                   child: Container(
-                    padding: EdgeInsets.only(top: Dimensions.height20),
+                    margin: EdgeInsets.only(top: Dimensions.height20),
                     height: Dimensions.pageLoginView,
                     child: Column(
                       children: [
@@ -83,15 +83,16 @@ class _LoginPageState extends State<LoginPage> {
                                 ))
                           ],
                         ),
-                        SizedBox(
-                          height: Dimensions.height20,
-                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
+                              margin: EdgeInsets.only(
+                                  top: Dimensions.logoTop,
+                                  left: Dimensions.logoLeft,
+                                  right: Dimensions.logoRight),
                               color: Colors.white,
-                              height: Dimensions.height45 * 1.5,
+                              height: Dimensions.logoHeight,
                               child: const Image(
                                 fit: BoxFit.cover,
                                 image: AssetImage("assets/images/logo.png"),
@@ -104,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         BigText(
                           text: AppMessage.LOGIN_TEXT,
-                          size: Dimensions.fontSize25,
+                          size: Dimensions.fontSize20,
                           color: AppColor.mainColor,
                           fontWeight: FontWeight.bold,
                         ),
@@ -129,6 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                                       Dimensions.radius15),
                                 ),
                               ),
+                              style: TextStyle(fontSize: Dimensions.fontSize14),
                             ),
                             SizedBox(
                               height: Dimensions.height10,
@@ -161,8 +163,12 @@ class _LoginPageState extends State<LoginPage> {
                                       Dimensions.radius15),
                                 ),
                               ),
+                              style: TextStyle(fontSize: Dimensions.fontSize14),
                             ),
                           ]),
+                        ),
+                        SizedBox(
+                          height: Dimensions.height10,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -194,6 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: BigText(
                                     text: AppMessage.LOGIN_TEXT,
                                     color: Colors.white,
+                                    size: Dimensions.fontSize14,
                                   ),
                                 ),
                               ),
@@ -209,8 +216,8 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: BigText(
                             text: AppMessage.FORGET_PASS_TEXT,
-                            size: Dimensions.fontSize16,
-                            color: Colors.blue,
+                            size: Dimensions.fontSize14,
+                            color: Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         )

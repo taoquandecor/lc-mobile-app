@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lcmobileapp/base/custom_loader.dart';
 import 'package:lcmobileapp/controller/auth_controller.dart';
 import 'package:lcmobileapp/route/route_helper.dart';
@@ -19,11 +19,52 @@ class ProfilePage extends StatelessWidget {
         backgroundColor: Colors.white,
         body: GetBuilder<AuthController>(
           builder: (authController) {
+            Widget showImage() {
+              try {
+                HttpOverrides.global = MyHttpOverrides();
+                String imagePath = authController.userModel.imagePath ?? "";
+                if (imagePath.isEmpty) {
+                  return Image.asset(
+                    "assets/images/user.png",
+                    height: Dimensions.avartaHeight,
+                    width: Dimensions.avartaWidth,
+                  );
+                }
+                String imageURL =
+                    AppContants.BASE_URL + AppContants.SLASH + imagePath;
+                return Image.network(
+                  imageURL,
+                  height: Dimensions.avartaHeight,
+                  width: Dimensions.avartaWidth,
+                  headers: AppContants.HEADER_IMAGE,
+                  errorBuilder: (context, error, stackTrace) => Image.asset(
+                    "assets/images/user.png",
+                    height: Dimensions.avartaHeight,
+                    width: Dimensions.avartaWidth,
+                  ),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return Image.asset(
+                        "assets/images/user.png",
+                        height: Dimensions.avartaHeight,
+                        width: Dimensions.avartaWidth,
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                );
+              } catch (e) {
+                return Image.asset(
+                  "assets/images/user.png",
+                  height: Dimensions.avartaHeight,
+                  width: Dimensions.avartaWidth,
+                );
+              }
+            }
+
             if (!authController.isLoading) {
-              String file = AppContants.BASE_URL +
-                  AppContants.SLASH +
-                  authController.userModel.imagePath!;
-              //print(file);
               return Stack(
                 children: [
                   //background color
@@ -49,12 +90,12 @@ class ProfilePage extends StatelessWidget {
                         BigText(
                           text: AppMessage.SETTING,
                           color: Colors.white,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize14,
                         ),
                         BigText(
                           text: AppMessage.PROFILE,
                           color: Colors.white,
-                          size: Dimensions.fontSize25,
+                          size: Dimensions.fontSize20,
                         ),
                         GestureDetector(
                           onTap: (() {
@@ -64,82 +105,50 @@ class ProfilePage extends StatelessWidget {
                             }
                           }),
                           child: BigText(
-                              text: AppMessage.LOG_OUT,
-                              color: Colors.white,
-                              size: Dimensions.fontSize16),
+                            text: AppMessage.LOG_OUT,
+                            color: Colors.white,
+                            size: Dimensions.fontSize14,
+                          ),
                         ),
                       ],
                     ),
                   ),
                   Positioned(
-                    top: Dimensions.height50 * 2,
-                    left: Dimensions.height50,
-                    right: Dimensions.height50,
+                    top: Dimensions.height50 * 2.5,
+                    left: Dimensions.width20 * 5,
+                    right: Dimensions.width20 * 5,
                     child: SafeArea(
                       child: SingleChildScrollView(
-                          child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: Dimensions.height50,
-                          ),
-                          Center(
-                            child: Container(
-                              width: Dimensions.width20 * 7,
-                              height: Dimensions.height20 * 7,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  Dimensions.radius80,
-                                ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  Dimensions.radius80,
-                                ),
-                                child: Image.network(
-                                  file,
-                                  headers: AppContants.HEADER_IMAGE,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Image.asset("assets/images/user.png"),
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return Image.asset(
-                                          "assets/images/user.png");
-                                    }
-                                    return const Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  },
-                                ),
-                              ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[showImage()],
                             ),
-                          ),
-                          SizedBox(
-                            height: Dimensions.height10,
-                          ),
-                          BigText(
-                            text: authController.userModel.displayName!,
-                            size: Dimensions.fontSize25,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          SizedBox(
-                            height: Dimensions.height10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              BigText(
-                                text:
-                                    "${AppMessage.ORGANIZATION}: ${authController.userModel.organizationName ?? ""}",
-                                size: Dimensions.fontSize16,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: Dimensions.height20,
-                          ),
-                        ],
-                      )),
+                            SizedBox(
+                              height: Dimensions.height20,
+                            ),
+                            BigText(
+                              text: authController.userModel.displayName ?? "",
+                              size: Dimensions.fontSize14,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            SizedBox(
+                              height: Dimensions.height10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                BigText(
+                                    text:
+                                        "${AppMessage.ORGANIZATION}: ${authController.userModel.organizationName ?? ""}",
+                                    size: Dimensions.fontSize12),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   Positioned(
@@ -154,17 +163,19 @@ class ProfilePage extends StatelessWidget {
                               onTap: () {
                                 Get.toNamed(RouteHelper.getUserInfoPage());
                               },
-                              child: const IconAndTextWidget(
+                              child: IconAndTextWidget(
                                 text: AppMessage.ACCOUNT_INFORMATION,
                                 icon: Icons.person,
                                 iconColor: Colors.orange,
+                                size: Dimensions.fontSize14,
                               ),
                             ),
                             SizedBox(
                               height: Dimensions.height10,
                             ),
                             Container(
-                              width: Dimensions.screenWidth,
+                              width:
+                                  Dimensions.screenWidth - Dimensions.height10,
                               height: 1.2,
                               margin:
                                   EdgeInsets.only(top: Dimensions.height20 / 5),
@@ -178,17 +189,19 @@ class ProfilePage extends StatelessWidget {
                                 Get.toNamed(
                                     RouteHelper.getChangePasswordPage());
                               },
-                              child: const IconAndTextWidget(
+                              child: IconAndTextWidget(
                                 text: AppMessage.CHANGE_PASSWORD,
                                 icon: Icons.key,
                                 iconColor: Colors.orange,
+                                size: Dimensions.fontSize14,
                               ),
                             ),
                             SizedBox(
                               height: Dimensions.height10,
                             ),
                             Container(
-                              width: Dimensions.screenWidth,
+                              width:
+                                  Dimensions.screenWidth - Dimensions.height10,
                               height: 1.2,
                               margin:
                                   EdgeInsets.only(top: Dimensions.height20 / 5),
@@ -204,17 +217,19 @@ class ProfilePage extends StatelessWidget {
                                   Get.offNamed(RouteHelper.getLoginPage());
                                 }
                               },
-                              child: const IconAndTextWidget(
+                              child: IconAndTextWidget(
                                 text: AppMessage.LOG_OUT,
                                 icon: Icons.logout,
                                 iconColor: Colors.orange,
+                                size: Dimensions.fontSize14,
                               ),
                             ),
                             SizedBox(
                               height: Dimensions.height10,
                             ),
                             Container(
-                              width: Dimensions.screenWidth,
+                              width:
+                                  Dimensions.screenWidth - Dimensions.height10,
                               height: 1.2,
                               margin:
                                   EdgeInsets.only(top: Dimensions.height20 / 5),
@@ -230,5 +245,14 @@ class ProfilePage extends StatelessWidget {
             }
           },
         ));
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

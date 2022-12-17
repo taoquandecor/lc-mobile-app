@@ -82,12 +82,10 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
     var deliveryDetailId = _deliveryDetail.id ?? "";
 
     List<DeliveryDetailWorkFlowModel> _delvieryDetailWFList = [];
-    // Lấy thông tin timelines
     Get.find<DeliveryDetailController>().getTimeLines(deliveryDetailId);
     _delvieryDetailWFList =
         Get.find<DeliveryDetailController>().deliveryDetailWFList;
 
-    // Lấy thông tin ảnh đã upload
     Get.find<AttachmentController>().getImageTicket(deliveryDetailId);
     AttachmentModel _attachmentModel =
         Get.find<AttachmentController>().attachmentModel;
@@ -97,6 +95,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
 
     Widget showImage() {
       try {
+        HttpOverrides.global = MyHttpOverrides();
         if (imagePath.isEmpty) {
           return Image.asset("assets/images/no_image_available.png");
         }
@@ -229,7 +228,6 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
             isScrollable: true,
             tabs: [
               Tab(
-                // tab chi tiết
                 icon: AppIcon(
                   icon: Icons.info_outline,
                   iconColor:
@@ -237,8 +235,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                   iconSize: Dimensions.fontSize20,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
-                iconMargin: EdgeInsets.only(
-                    top: Dimensions.height10 + Dimensions.height5),
+                iconMargin: EdgeInsets.only(top: Dimensions.height10),
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
@@ -249,7 +246,6 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                   ),
                 ),
               ),
-              // Cân chốt
               Tab(
                 icon: AppIcon(
                   icon: Icons.scale_outlined,
@@ -258,8 +254,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                   iconSize: Dimensions.fontSize20,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
-                iconMargin: EdgeInsets.only(
-                    top: Dimensions.height10 + Dimensions.height5),
+                iconMargin: EdgeInsets.only(top: Dimensions.height10),
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
@@ -270,7 +265,6 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                   ),
                 ),
               ),
-              // Trình tự cân (Timelines)
               Tab(
                 icon: AppIcon(
                   icon: Icons.list_sharp,
@@ -279,8 +273,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                   iconSize: Dimensions.fontSize20,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
-                iconMargin: EdgeInsets.only(
-                    top: Dimensions.height10 + Dimensions.height5),
+                iconMargin: EdgeInsets.only(top: Dimensions.height10),
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
@@ -291,7 +284,6 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                   ),
                 ),
               ),
-              // Lịch sử bì
               Tab(
                 icon: AppIcon(
                   icon: Icons.history,
@@ -300,8 +292,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                   iconSize: Dimensions.fontSize20,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
-                iconMargin: EdgeInsets.only(
-                    top: Dimensions.height10 + Dimensions.height5),
+                iconMargin: EdgeInsets.only(top: Dimensions.height10),
                 child: Align(
                     alignment: Alignment.center,
                     child: BigText(
@@ -317,7 +308,6 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
         body: TabBarView(
           controller: _tabController,
           children: [
-            // nội dung tab chi tiết
             Container(
               color: Colors.white,
               margin: EdgeInsets.only(
@@ -610,50 +600,6 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                 ],
               ),
             ),
-            // Chụp ảnh phiếu cân
-            // Container(
-            //   color: Colors.white,
-            //   padding: EdgeInsets.only(
-            //       top: Dimensions.height20,
-            //       left: Dimensions.width10,
-            //       right: Dimensions.width10,
-            //       bottom: Dimensions.height10),
-            //   height: Dimensions.height50,
-            //   child: Column(
-            //     children: [
-            //       Container(
-            //         margin: EdgeInsets.only(
-            //             top: Dimensions.height10,
-            //             left: Dimensions.width10,
-            //             right: Dimensions.width10),
-            //         child: SizedBox(
-            //           height: Dimensions.height45,
-            //           width: Dimensions.screenWidth - Dimensions.height20,
-            //           child: ElevatedButton(
-            //             onPressed: () {
-            //               _showModalBottomSheet(context);
-            //             },
-            //             style: ButtonStyle(
-            //               backgroundColor:
-            //                   MaterialStateProperty.all(AppColor.mainColor),
-            //               shape: MaterialStateProperty.all<
-            //                       RoundedRectangleBorder>(
-            //                   RoundedRectangleBorder(
-            //                       borderRadius: BorderRadius.circular(
-            //                           Dimensions.radius15),
-            //                       side: BorderSide(color: AppColor.mainColor))),
-            //             ),
-            //             child: BigText(
-            //               text: AppMessage.ADD_IMAGE,
-            //               color: Colors.white,
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // Nội dung cân chốt
             SingleChildScrollView(
               child: Container(
                 color: Colors.white,
@@ -847,7 +793,6 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                 ]),
               ),
             ),
-            // Nội dung tab trình tự
             Container(
                 color: Colors.white,
                 margin: EdgeInsets.only(
@@ -897,6 +842,7 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 20,
+                        style: TextStyle(fontSize: Dimensions.fontSize12),
                       );
                     }
 
@@ -913,26 +859,28 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                         itemCount: _delvieryDetailWFList.length,
                         itemBuilder: ((context, index) {
                           return TimelineTile(
-                            oppositeContents: Padding(
+                            oppositeContents: Container(
+                              height: Dimensions.height50 * 2,
                               padding: EdgeInsets.only(
+                                top: 0,
                                 left: Dimensions.width10 / 2,
                                 right: Dimensions.width20,
                               ),
                               child: timeWidget(index),
                             ),
-                            contents: Card(
-                              elevation: 0,
-                              child: Container(
-                                padding: EdgeInsets.only(
-                                  left: Dimensions.width10 / 2,
-                                  right: Dimensions.width20,
-                                ),
-                                height: Dimensions.height50 * 2,
-                                child: showContent(index),
+                            contents: Container(
+                              margin: EdgeInsets.only(
+                                top: 0,
+                                bottom: Dimensions.height10,
+                                left: Dimensions.width10 / 2,
+                                right: Dimensions.width20,
                               ),
+                              height: Dimensions.height50 * 2,
+                              child: showContent(index),
                             ),
                             node: TimelineNode(
                               indicator: DotIndicator(
+                                position: 0,
                                 color: nodeTimeLine(index),
                               ),
                               startConnector: SolidLineConnector(
@@ -946,7 +894,6 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
                         }));
                   }),
                 )),
-            // Nội dung tab lịch sử bì
             Container(
               color: AppColor.backgroundWhiteColor,
               margin: EdgeInsets.only(
@@ -1074,5 +1021,14 @@ class _SecondWeightDetailPageState extends State<SecondWeightDetailPage>
         ),
       ),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

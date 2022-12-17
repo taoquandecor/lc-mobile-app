@@ -314,10 +314,10 @@ class _FirstWeightPageState extends State<FirstWeightPage>
                                   onRefresh: () {
                                     return Future.delayed(
                                       const Duration(seconds: 1),
-                                      () {
+                                      () async {
+                                        await deliveryDetailController
+                                            .getRegistrationTicketList();
                                         setState(() {
-                                          deliveryDetailController
-                                              .getRegistrationTicketList();
                                           _registerTicketList =
                                               deliveryDetailController
                                                   .registerTicketList;
@@ -511,7 +511,6 @@ class _FirstWeightPageState extends State<FirstWeightPage>
                     : const CustomLoader();
               },
             ),
-            // Phiếu cân
             GetBuilder<DeliveryDetailController>(builder: (ticketController) {
               return ticketController.isLoaded
                   ? SingleChildScrollView(
@@ -569,9 +568,9 @@ class _FirstWeightPageState extends State<FirstWeightPage>
                                 onRefresh: () {
                                   return Future.delayed(
                                     const Duration(seconds: 1),
-                                    () {
+                                    () async {
+                                      await ticketController.getTicketList();
                                       setState(() {
-                                        ticketController.getTicketList();
                                         _ticketList =
                                             ticketController.ticketList;
                                         _tempTicketList = _ticketList;
@@ -795,7 +794,7 @@ class _FirstWeightPageState extends State<FirstWeightPage>
                     )
                   : const CustomLoader();
             }),
-            // Cân chốt
+
             GetBuilder<DeliveryDetailController>(
                 builder: (deliveryDetailController) {
               return deliveryDetailController.isLoaded
@@ -854,10 +853,10 @@ class _FirstWeightPageState extends State<FirstWeightPage>
                                 onRefresh: () {
                                   return Future.delayed(
                                     const Duration(seconds: 1),
-                                    () {
+                                    () async {
+                                      await deliveryDetailController
+                                          .getPendingTicketList();
                                       setState(() {
-                                        deliveryDetailController
-                                            .getPendingTicketList();
                                         _pendingTicketList =
                                             deliveryDetailController
                                                 .pendingTicketList;

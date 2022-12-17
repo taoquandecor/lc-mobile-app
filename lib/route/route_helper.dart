@@ -5,10 +5,12 @@ import 'package:lcmobileapp/pages/auth/change_password.dart';
 import 'package:lcmobileapp/pages/auth/forgot_password_page.dart';
 import 'package:lcmobileapp/pages/auth/login_page.dart';
 import 'package:lcmobileapp/pages/home/home_page.dart';
+import 'package:lcmobileapp/pages/tally/delivery_detail_page.dart';
 import 'package:lcmobileapp/pages/tally/first_weight_detail_page.dart';
 import 'package:lcmobileapp/pages/tally/first_weight_page.dart';
 import 'package:lcmobileapp/pages/tally/second_weight_detail_page.dart';
 import 'package:lcmobileapp/pages/tally/tally_berth_detail_page.dart';
+import 'package:lcmobileapp/pages/tally/ticket_detail_page.dart';
 import 'package:lcmobileapp/pages/tally/upload_ticket_page.dart';
 import 'package:lcmobileapp/splash/splash_page.dart';
 
@@ -25,6 +27,8 @@ class RouteHelper {
   static const String loginPage = "/login-page";
   static const String tallyBerthDetail = "/tally-berth-detail";
   static const String forgotPassword = "/forgot-password";
+  static const String deliveryDetail = "/delivery-detail";
+  static const String ticketDetail = "/ticket-detail";
 
   static String getSplashPage() => "$splashPage";
   static String getInitialPage() => "$initialPage";
@@ -42,6 +46,11 @@ class RouteHelper {
   static String getForgotPasswordPage() => "$forgotPassword";
   static String getUploadTicketPage(int pageId) =>
       "$uploadTicketPage?pageId=$pageId";
+  static String getDeliveryDetailPage(
+          String vesselVoyageId, String fromDate, String toDate) =>
+      "$deliveryDetail?vesselVoyageId=$vesselVoyageId&fromDate=$fromDate&toDate=$toDate";
+  static String getTicketDetailPage(int pageId) =>
+      "$ticketDetail?pageId=$pageId";
 
   static List<GetPage> routes = [
     GetPage(
@@ -120,6 +129,30 @@ class RouteHelper {
       page: () {
         var pageId = Get.parameters["pageId"];
         return UploadTicketPage(
+          pageId: int.parse(pageId.toString()),
+        );
+      },
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: deliveryDetail,
+      page: () {
+        var vesselVoyageId = Get.parameters["vesselVoyageId"];
+        var fromDate = Get.parameters["fromDate"];
+        var toDate = Get.parameters["toDate"];
+        return DeliveryDetailPage(
+          vesselVoyageId: vesselVoyageId.toString(),
+          fromDate: fromDate.toString(),
+          toDate: toDate.toString(),
+        );
+      },
+      transition: Transition.fade,
+    ),
+    GetPage(
+      name: ticketDetail,
+      page: () {
+        var pageId = Get.parameters["pageId"];
+        return TicketDetailPage(
           pageId: int.parse(pageId.toString()),
         );
       },

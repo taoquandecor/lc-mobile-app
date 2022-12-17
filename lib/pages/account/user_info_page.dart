@@ -70,7 +70,7 @@ class UserInfoPage extends StatelessWidget {
         backgroundColor: AppColor.backgroundWhiteColor,
         title: BigText(
           text: AppMessage.ACCOUNT_INFORMATION,
-          size: Dimensions.fontSize25,
+          size: Dimensions.fontSize20,
           color: AppColor.mainColor,
         ),
         leading: BackButton(
@@ -100,7 +100,7 @@ class UserInfoPage extends StatelessWidget {
                       children: [
                         SmallText(
                           text: AppMessage.USERNAME,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         SizedBox(
                           height: Dimensions.height10 / 2,
@@ -116,13 +116,14 @@ class UserInfoPage extends StatelessWidget {
                                   BorderRadius.circular(Dimensions.radius15),
                             ),
                           ),
+                          style: TextStyle(fontSize: Dimensions.fontSize14),
                         ),
                         SizedBox(
                           height: Dimensions.height10,
                         ),
                         SmallText(
                           text: AppMessage.GROUP_ROLE,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         SizedBox(
                           height: Dimensions.height10 / 2,
@@ -138,13 +139,14 @@ class UserInfoPage extends StatelessWidget {
                                   BorderRadius.circular(Dimensions.radius15),
                             ),
                           ),
+                          style: TextStyle(fontSize: Dimensions.fontSize14),
                         ),
                         SizedBox(
                           height: Dimensions.height10,
                         ),
                         SmallText(
                           text: "Email",
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         SizedBox(
                           height: Dimensions.height10 / 2,
@@ -158,13 +160,14 @@ class UserInfoPage extends StatelessWidget {
                                   BorderRadius.circular(Dimensions.radius15),
                             ),
                           ),
+                          style: TextStyle(fontSize: Dimensions.fontSize14),
                         ),
                         SizedBox(
                           height: Dimensions.height10,
                         ),
                         SmallText(
                           text: AppMessage.FULL_NAME,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         SizedBox(
                           height: Dimensions.height10 / 2,
@@ -178,13 +181,14 @@ class UserInfoPage extends StatelessWidget {
                                   BorderRadius.circular(Dimensions.radius15),
                             ),
                           ),
+                          style: TextStyle(fontSize: Dimensions.fontSize14),
                         ),
                         SizedBox(
                           height: Dimensions.height10,
                         ),
                         SmallText(
                           text: AppMessage.PHONE_NUMBER,
-                          size: Dimensions.fontSize16,
+                          size: Dimensions.fontSize12,
                         ),
                         SizedBox(
                           height: Dimensions.height10 / 2,
@@ -198,6 +202,7 @@ class UserInfoPage extends StatelessWidget {
                                   BorderRadius.circular(Dimensions.radius15),
                             ),
                           ),
+                          style: TextStyle(fontSize: Dimensions.fontSize14),
                         ),
                         SizedBox(
                           height: Dimensions.height10,
@@ -223,6 +228,7 @@ class UserInfoPage extends StatelessWidget {
                             child: BigText(
                               text: AppMessage.UPDATE,
                               color: Colors.white,
+                              size: Dimensions.fontSize14,
                             ),
                           ),
                         ),

@@ -281,7 +281,7 @@ class _UploadTicketPageState extends State<UploadTicketPage>
           ),
           centerTitle: true,
           title: BigText(
-            text: AppMessage.WEIGHT_OUT,
+            text: AppMessage.UPLOAD_TICKET,
             color: AppColor.mainColor,
             size: Dimensions.fontSize20,
           ),
@@ -296,6 +296,7 @@ class _UploadTicketPageState extends State<UploadTicketPage>
             },
             indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.tab,
+            isScrollable: true,
             tabs: [
               Tab(
                 // tab chi tiết
@@ -306,8 +307,7 @@ class _UploadTicketPageState extends State<UploadTicketPage>
                   iconSize: Dimensions.fontSize20,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
-                iconMargin: EdgeInsets.only(
-                    top: Dimensions.height10 + Dimensions.height5),
+                iconMargin: EdgeInsets.only(top: Dimensions.height10),
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
@@ -327,8 +327,7 @@ class _UploadTicketPageState extends State<UploadTicketPage>
                   iconSize: Dimensions.fontSize20,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
-                iconMargin: EdgeInsets.only(
-                    top: Dimensions.height10 + Dimensions.height5),
+                iconMargin: EdgeInsets.only(top: Dimensions.height10),
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
@@ -348,8 +347,7 @@ class _UploadTicketPageState extends State<UploadTicketPage>
                   iconSize: Dimensions.fontSize20,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
-                iconMargin: EdgeInsets.only(
-                    top: Dimensions.height10 + Dimensions.height5),
+                iconMargin: EdgeInsets.only(top: Dimensions.height10),
                 child: Align(
                   alignment: Alignment.center,
                   child: BigText(
@@ -369,8 +367,7 @@ class _UploadTicketPageState extends State<UploadTicketPage>
                   iconSize: Dimensions.fontSize20,
                   backgroundColor: AppColor.backgroundWhiteColor,
                 ),
-                iconMargin: EdgeInsets.only(
-                    top: Dimensions.height10 + Dimensions.height5),
+                iconMargin: EdgeInsets.only(top: Dimensions.height10),
                 child: Align(
                     alignment: Alignment.center,
                     child: BigText(
@@ -751,7 +748,7 @@ class _UploadTicketPageState extends State<UploadTicketPage>
                       }
                       return BigText(
                         text: outputDate,
-                        size: Dimensions.fontSize16,
+                        size: Dimensions.fontSize12,
                       );
                     }
 
@@ -772,6 +769,7 @@ class _UploadTicketPageState extends State<UploadTicketPage>
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 20,
+                        style: TextStyle(fontSize: Dimensions.fontSize12),
                       );
                     }
 
@@ -788,12 +786,16 @@ class _UploadTicketPageState extends State<UploadTicketPage>
                         itemCount: _delvieryDetailWFList.length,
                         itemBuilder: ((context, index) {
                           return TimelineTile(
-                            oppositeContents: Padding(
-                              padding: EdgeInsets.only(
-                                left: Dimensions.width10 / 2,
-                                right: Dimensions.width20,
+                            oppositeContents: Card(
+                              elevation: 0,
+                              child: Container(
+                                padding: EdgeInsets.only(
+                                  left: Dimensions.width10 / 2,
+                                  right: Dimensions.width20,
+                                ),
+                                height: Dimensions.height50 * 2,
+                                child: timeWidget(index),
                               ),
-                              child: timeWidget(index),
                             ),
                             contents: Card(
                               elevation: 0,
@@ -808,6 +810,7 @@ class _UploadTicketPageState extends State<UploadTicketPage>
                             ),
                             node: TimelineNode(
                               indicator: DotIndicator(
+                                position: 0,
                                 color: nodeTimeLine(index),
                               ),
                               startConnector: SolidLineConnector(

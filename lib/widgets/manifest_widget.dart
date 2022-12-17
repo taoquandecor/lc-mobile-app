@@ -26,12 +26,14 @@ class ManifestWidget extends StatelessWidget {
         text: "$billOfLading*$consigneeCode*$cargoCode",
         size: size,
         color: Colors.black,
+        overflow: TextOverflow.ellipsis,
       );
     }
     return BigText(
       text: "$billOfLading*$consigneeCode*$delegrateCode*$cargoCode",
       size: size,
       color: Colors.black,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

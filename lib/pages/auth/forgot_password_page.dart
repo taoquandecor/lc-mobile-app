@@ -47,20 +47,20 @@ class ForgotPasswordPage extends StatelessWidget {
           return !authController.isLoading
               ? SingleChildScrollView(
                   child: Container(
-                    padding: EdgeInsets.only(top: Dimensions.height20),
+                    margin: EdgeInsets.only(top: Dimensions.height20),
                     height: Dimensions.pageLoginView,
                     child: Column(
                       children: [
-                        SizedBox(
-                          height: Dimensions.height45,
-                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
+                              margin: EdgeInsets.only(
+                                  top: Dimensions.logoTop,
+                                  left: Dimensions.logoLeft,
+                                  right: Dimensions.logoRight),
                               color: Colors.white,
-                              width: Dimensions.width20 * 12,
-                              height: Dimensions.height45 * 1.5,
+                              height: Dimensions.logoHeight,
                               child: const Image(
                                 fit: BoxFit.cover,
                                 image: AssetImage("assets/images/logo.png"),
@@ -73,7 +73,7 @@ class ForgotPasswordPage extends StatelessWidget {
                         ),
                         BigText(
                           text: AppMessage.FORGOT_PASSWORD,
-                          size: Dimensions.fontSize25,
+                          size: Dimensions.fontSize20,
                           color: AppColor.mainColor,
                           fontWeight: FontWeight.bold,
                         ),
@@ -98,6 +98,7 @@ class ForgotPasswordPage extends StatelessWidget {
                                       Dimensions.radius15),
                                 ),
                               ),
+                              style: TextStyle(fontSize: Dimensions.fontSize14),
                             ),
                           ]),
                         ),
@@ -131,6 +132,7 @@ class ForgotPasswordPage extends StatelessWidget {
                                   child: BigText(
                                     text: AppMessage.FORGOT_PASSWORD,
                                     color: Colors.white,
+                                    size: Dimensions.fontSize16,
                                   ),
                                 ),
                               ),

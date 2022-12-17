@@ -55,7 +55,7 @@ class ChangePasswordPage extends StatelessWidget {
       appBar: AppBar(
         title: BigText(
           text: AppMessage.CHANGE_PASSWORD,
-          size: Dimensions.fontSize25,
+          size: Dimensions.fontSize20,
           color: AppColor.mainColor,
         ),
         backgroundColor: Colors.white,
@@ -76,7 +76,7 @@ class ChangePasswordPage extends StatelessWidget {
             children: [
               SmallText(
                 text: AppMessage.CURRENT_PASSWORD,
-                size: Dimensions.fontSize16,
+                size: Dimensions.fontSize12,
               ),
               SizedBox(
                 height: Dimensions.height10,
@@ -91,13 +91,14 @@ class ChangePasswordPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(Dimensions.radius15),
                   ),
                 ),
+                style: TextStyle(fontSize: Dimensions.fontSize14),
               ),
               SizedBox(
                 height: Dimensions.height10,
               ),
               SmallText(
                 text: AppMessage.NEW_PASSWORD,
-                size: Dimensions.fontSize16,
+                size: Dimensions.fontSize12,
               ),
               SizedBox(
                 height: Dimensions.height10,
@@ -112,13 +113,14 @@ class ChangePasswordPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(Dimensions.radius15),
                   ),
                 ),
+                style: TextStyle(fontSize: Dimensions.fontSize14),
               ),
               SizedBox(
                 height: Dimensions.height10,
               ),
               SmallText(
                 text: AppMessage.RENEW_PASSWORD,
-                size: Dimensions.fontSize16,
+                size: Dimensions.fontSize12,
               ),
               SizedBox(
                 height: Dimensions.height10,
@@ -133,6 +135,7 @@ class ChangePasswordPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(Dimensions.radius15),
                   ),
                 ),
+                style: TextStyle(fontSize: Dimensions.fontSize14),
               ),
               SizedBox(
                 height: Dimensions.height10,
@@ -156,6 +159,7 @@ class ChangePasswordPage extends StatelessWidget {
                   child: BigText(
                     text: AppMessage.UPDATE,
                     color: Colors.white,
+                    size: Dimensions.fontSize14,
                   ),
                 ),
               ),

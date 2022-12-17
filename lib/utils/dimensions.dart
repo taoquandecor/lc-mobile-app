@@ -35,6 +35,17 @@ class Dimensions {
   //splash screen dimensions
   static double splashImg = screenHeight / 2.73;
 
+  static double avartaHeight = screenHeight / 4.33;
+  static double avartaWidth = screenHeight / 4.33;
+  static double avartaTop = screenHeight / 5.29;
+  static double avartaLeft = screenWidth / 6.33;
+  static double avartaRight = screenWidth / 6.33;
+  static double logoHeight = screenHeight / 7.855;
+  static double logoWidth = screenWidth / 1.60;
+  static double logoTop = screenHeight / 10;
+  static double logoLeft = screenWidth / 12;
+  static double logoRight = screenWidth / 12;
+
   // icon size
   static double iconSize24 = screenHeight / 35.17;
   static double iconSize16 = screenHeight / 42.71;

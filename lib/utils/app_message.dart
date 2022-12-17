@@ -10,6 +10,8 @@ class AppMessage {
   static const String TALLY_WEIGHT_BERTH = "TALLY CẦU BẾN";
   static const String TALLY_BERTH = "Tally cầu bến";
   static const String WEIGHT_OUT_TEXT = "Cân chốt";
+  static const String DELIVERY_DETAIL_LIST = "DANH SÁCH PHIẾU CÂN";
+  static const String DELIVERY_DETAIL = "CHI TIẾT PHIẾU CÂN";
 
   static const String REGISTRATION_TICKET_ERROR =
       "Không thể lấy được danh sách phiếu đăng ký";
@@ -17,6 +19,11 @@ class AppMessage {
       "Không thể lấy được danh sách phiếu chờ";
 
   static const String HINT_TEXT_TALLY_WEIGHT_BOT = "Biển số xe";
+
+  static const String NUM_OF_TURN = "Số chuyến";
+  static const String TURN = "Chuyến";
+  static const String TONS = "Tấn";
+  static const String CHOOSE_DATE = "Chọn thời gian";
 
   // Chi tiết tally bốt cân
   static const String DETAIL_TAB = "Chi tiết";
@@ -37,6 +44,7 @@ class AppMessage {
 
   static const String WEIGHT_INPUT = "CÂN VÀO";
   static const String WEIGHT_OUT = "CÂN CHỐT";
+  static const String UPLOAD_TICKET = "PHIẾU CÂN";
 
   static const String LOADING = "LOADING";
   static const String UNLOADING = "UNLOADING";
@@ -58,10 +66,14 @@ class AppMessage {
   static const String WEIGHT_BY = "Cân bởi";
   static const String NOTE = "Lưu ý";
   static const String SELECT_BARGE = "Chọn sà lan";
+  static const String SELECT_VOYAGE = "Chọn chuyến tầu";
   static const String ADD_IMAGE = "Thêm ảnh";
   static const String CHOOSE_IMAGE_FROM_LIBRARY = "Chọn ảnh từ thư viện";
   static const String TAKE_PICTURE = "Chụp ảnh";
   static const String WEIGHT_IN = "TL vào:";
+  static const String COUNT_TICKET = "Tổng phiếu";
+  static const String SUMMARY_NET_WEIGHT = "Tổng hàng";
+  static const String TICKET = "phiếu";
 
   // account
   static const String PROFILE = "Profile";
@@ -73,7 +85,7 @@ class AppMessage {
   static const String UPDATE = "Cập nhật";
 
   // login
-  static const String USERNAME = "Tên đăng nhập";
+  static const String USERNAME = "Tài khoản";
   static const String GROUP_ROLE = "Nhóm quyền";
   static const String FULL_NAME = "Tên đầy đủ";
   static const String PHONE_NUMBER = "Số điện thoại";
@@ -111,7 +123,7 @@ class AppMessage {
   static const String ERROR_MESSAGE4 = "Mật khẩu không khớp";
   static const String ERROR_MESSAGE5 =
       "Token đã hết hạn. Đề nghị đăng nhập lại";
-  static const String ERROR_MESSAGE6 = "Tên đăng nhâp không để trống";
+  static const String ERROR_MESSAGE6 = "Tài khoản không để trống";
   static const String ERROR_MESSAGE7 = "Mật khẩu không để trống";
 
   // success message

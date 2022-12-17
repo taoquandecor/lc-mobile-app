@@ -159,197 +159,219 @@ class TallyBerthPageState extends State<TallyBerthPage> {
                               left: Dimensions.width10 / 2,
                               right: Dimensions.width10 / 2,
                               bottom: Dimensions.height10),
-                          child: ListView.builder(
-                            itemCount: _tallyTicketList.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(
-                                      RouteHelper.getTallyBerthDetailPage(
-                                          index));
+                          child: RefreshIndicator(
+                            onRefresh: () {
+                              return Future.delayed(
+                                const Duration(seconds: 1),
+                                () async {
+                                  await deliveryDetailController
+                                      .getTallyBerthTicketList();
+                                  setState(() {
+                                    _tallyTicketList = deliveryDetailController
+                                        .tallyBerthTicketList;
+                                    _tempTallyTicketList = _tallyTicketList;
+                                  });
                                 },
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            // Tầu sàlan
-                                            DisplayRowDataWidget(
-                                              firstField:
-                                                  _tallyTicketList[index]
-                                                      .vesselCode
-                                                      .toString(),
-                                              secondField:
-                                                  _tallyTicketList[index]
-                                                          .bargeCode ??
-                                                      "",
-                                              firstColor: AppColor.mainColor,
-                                              firstSize: Dimensions.fontSize14,
-                                              secondSize: Dimensions.fontSize12,
-                                              fontWeight2: FontWeight.normal,
-                                            ),
-                                            SizedBox(
-                                              height: Dimensions.height10 / 5,
-                                            ),
-                                            // Ben nhan va Uy thac
-                                            DisplayRowDataWidget(
-                                              firstField:
-                                                  _tallyTicketList[index]
-                                                      .consigneeCode
-                                                      .toString(),
-                                              firstColor: Colors.green,
-                                              firstSize: Dimensions.fontSize10,
-                                              secondSize: Dimensions.fontSize10,
-                                              secondField:
-                                                  _tallyTicketList[index]
-                                                          .delegateCode ??
-                                                      "",
-                                            ),
-                                            SizedBox(
-                                              height: Dimensions.height10 / 5,
-                                            ),
-                                            BigText(
-                                              text: _tallyTicketList[index]
-                                                      .operationTerminalCode ??
-                                                  "",
-                                              size: Dimensions.fontSize10,
-                                              color: Colors.black,
-                                            ),
-                                          ],
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    BigText(
-                                                      text: _tallyTicketList[
-                                                                  index]
-                                                              .vehiclePrimaryCode ??
-                                                          "",
-                                                      size:
-                                                          Dimensions.fontSize12,
-                                                      color: AppColor.mainColor,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    BigText(
-                                                      text: _tallyTicketList[
-                                                                      index]
-                                                                  .vehicleSecondaryCode
-                                                                  .toString() ==
-                                                              "null"
-                                                          ? ""
-                                                          : "/ ${_tallyTicketList[index].vehicleSecondaryCode ?? ""}",
-                                                      size:
-                                                          Dimensions.fontSize12,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    SmallText(
-                                                      text: _tallyTicketList[
-                                                                  index]
-                                                              .code ??
-                                                          "",
-                                                      size: Dimensions
-                                                              .fontSize12 -
-                                                          4,
-                                                    )
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                            SizedBox(
-                                              height: Dimensions.height10 / 5,
-                                            ),
-                                            BigText(
-                                              text: _tallyTicketList[index]
-                                                  .serviceTypeName!,
-                                              size: Dimensions.fontSize10,
-                                              color: Colors.black,
-                                            ),
-                                            SizedBox(
-                                              height: Dimensions.height10 / 5,
-                                            ),
-                                            // chủ hàng ủy thác loại hàng billoflading
-                                            ManifestWidget(
-                                              billOfLading:
-                                                  _tallyTicketList[index]
-                                                          .billOfLading ??
-                                                      "",
-                                              consigneeCode: _tallyTicketList[
-                                                          index]
-                                                      .manifestConsigneeCode ??
-                                                  "",
-                                              cargoCode: _tallyTicketList[index]
-                                                      .cargoCode ??
-                                                  "",
-                                              delegrateCode:
-                                                  _tallyTicketList[index]
-                                                          .delegateCode ??
-                                                      "",
-                                              size: Dimensions.fontSize10,
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: Dimensions.height10 / 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        BigText(
-                                          text: AppMessage.WEIGHT_IN,
-                                          size: Dimensions.fontSize10,
-                                          color: Colors.black,
-                                        ),
-                                        BigText(
-                                          text:
-                                              "${f.format(int.parse(_tallyTicketList[index].tareWeight.toString()))} (Kg) ",
-                                          size: Dimensions.fontSize10,
-                                          color: AppColor.mainColor,
-                                        ),
-                                        BigText(
-                                          text:
-                                              " ${AppMessage.AT} ${formatDateTime(_tallyTicketList[index].tareTime.toString())} ${AppMessage.FOR} ${_tallyTicketList[index].tareAccountDisplayName}",
-                                          size: Dimensions.fontSize10,
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: Dimensions.height10 / 5,
-                                    ),
-                                    Container(
-                                      width: Dimensions.screenWidth,
-                                      height: 1.2,
-                                      margin: const EdgeInsets.only(top: 0),
-                                      color: AppColor.lineColor,
-                                    ),
-                                    SizedBox(
-                                      height: Dimensions.height10 / 5,
-                                    ),
-                                  ],
-                                ),
                               );
                             },
+                            child: ListView.builder(
+                              itemCount: _tallyTicketList.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.toNamed(
+                                        RouteHelper.getTallyBerthDetailPage(
+                                            index));
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // Tầu sàlan
+                                              DisplayRowDataWidget(
+                                                firstField:
+                                                    _tallyTicketList[index]
+                                                        .vesselCode
+                                                        .toString(),
+                                                secondField:
+                                                    _tallyTicketList[index]
+                                                            .bargeCode ??
+                                                        "",
+                                                firstColor: AppColor.mainColor,
+                                                firstSize:
+                                                    Dimensions.fontSize14,
+                                                secondSize:
+                                                    Dimensions.fontSize12,
+                                                fontWeight2: FontWeight.normal,
+                                              ),
+                                              SizedBox(
+                                                height: Dimensions.height10 / 5,
+                                              ),
+                                              // Ben nhan va Uy thac
+                                              DisplayRowDataWidget(
+                                                firstField:
+                                                    _tallyTicketList[index]
+                                                        .consigneeCode
+                                                        .toString(),
+                                                firstColor: Colors.green,
+                                                firstSize:
+                                                    Dimensions.fontSize10,
+                                                secondSize:
+                                                    Dimensions.fontSize10,
+                                                secondField:
+                                                    _tallyTicketList[index]
+                                                            .delegateCode ??
+                                                        "",
+                                              ),
+                                              SizedBox(
+                                                height: Dimensions.height10 / 5,
+                                              ),
+                                              BigText(
+                                                text: _tallyTicketList[index]
+                                                        .operationTerminalCode ??
+                                                    "",
+                                                size: Dimensions.fontSize10,
+                                                color: Colors.black,
+                                              ),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      BigText(
+                                                        text: _tallyTicketList[
+                                                                    index]
+                                                                .vehiclePrimaryCode ??
+                                                            "",
+                                                        size: Dimensions
+                                                            .fontSize12,
+                                                        color:
+                                                            AppColor.mainColor,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      BigText(
+                                                        text: _tallyTicketList[
+                                                                        index]
+                                                                    .vehicleSecondaryCode
+                                                                    .toString() ==
+                                                                "null"
+                                                            ? ""
+                                                            : "/ ${_tallyTicketList[index].vehicleSecondaryCode ?? ""}",
+                                                        size: Dimensions
+                                                            .fontSize12,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      SmallText(
+                                                        text: _tallyTicketList[
+                                                                    index]
+                                                                .code ??
+                                                            "",
+                                                        size: Dimensions
+                                                                .fontSize12 -
+                                                            4,
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                height: Dimensions.height10 / 5,
+                                              ),
+                                              BigText(
+                                                text: _tallyTicketList[index]
+                                                    .serviceTypeName!,
+                                                size: Dimensions.fontSize10,
+                                                color: Colors.black,
+                                              ),
+                                              SizedBox(
+                                                height: Dimensions.height10 / 5,
+                                              ),
+                                              // chủ hàng ủy thác loại hàng billoflading
+                                              ManifestWidget(
+                                                billOfLading:
+                                                    _tallyTicketList[index]
+                                                            .billOfLading ??
+                                                        "",
+                                                consigneeCode: _tallyTicketList[
+                                                            index]
+                                                        .manifestConsigneeCode ??
+                                                    "",
+                                                cargoCode:
+                                                    _tallyTicketList[index]
+                                                            .cargoCode ??
+                                                        "",
+                                                delegrateCode:
+                                                    _tallyTicketList[index]
+                                                            .delegateCode ??
+                                                        "",
+                                                size: Dimensions.fontSize10,
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: Dimensions.height10 / 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          BigText(
+                                            text: AppMessage.WEIGHT_IN,
+                                            size: Dimensions.fontSize10,
+                                            color: Colors.black,
+                                          ),
+                                          BigText(
+                                            text:
+                                                "${f.format(int.parse(_tallyTicketList[index].tareWeight.toString()))} (Kg) ",
+                                            size: Dimensions.fontSize10,
+                                            color: AppColor.mainColor,
+                                          ),
+                                          BigText(
+                                            text:
+                                                " ${AppMessage.AT} ${formatDateTime(_tallyTicketList[index].tareTime.toString())} ${AppMessage.FOR} ${_tallyTicketList[index].tareAccountDisplayName}",
+                                            size: Dimensions.fontSize10,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: Dimensions.height10 / 5,
+                                      ),
+                                      Container(
+                                        width: Dimensions.screenWidth,
+                                        height: 1.2,
+                                        margin: const EdgeInsets.only(top: 0),
+                                        color: AppColor.lineColor,
+                                      ),
+                                      SizedBox(
+                                        height: Dimensions.height10 / 5,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ],
